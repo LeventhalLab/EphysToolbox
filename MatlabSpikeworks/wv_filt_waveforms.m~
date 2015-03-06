@@ -1,0 +1,35 @@
+function filt_wv = wv_filt_waveforms( wv_data, maxLevel )
+%
+% usage: [interp_wv, upsample_Fs] = interpWaveforms( wv_data, sincLength, Fs, cutoff_Fs, upsample_Fs )
+%
+% INPUTS:
+%   wv_data - the original waveforms, with some buffering at the edges to
+%       account for edge effects during the sinc interpolation. An 
+%       m x n x p array, where m is the number of timestamps
+%       (spikes), n is the number of points in a single waveform, and p is
+%       the number of wires
+%   maxLevel - the level of decomposition to perform on the data. This
+%       integer implicitly defines the cutoff frequency of the filter.
+% 		Specifically, cutoff frequency = samplingrate/(2^(maxLevel+1))
+%
+% varargins:
+%
+% OUTPUTS:
+%   filt_wv - the filtered signal with dimensions the same as
+%       wv_data
+
+numWaves      = size(wv_data, 1);
+points_per_wv = size(wv_data, 2);
+numWires      = size(wv_data, 3);
+
+filt_wv = zeros(numWaves, points_per_wv, numWires);
+
+for iWire = 1 : numWaves
+        
+    cur_wvs = squeeze(wv_data(i_wv, :, :))';
+
+    y = wavefilter(cur_wvs, ones(numWires, 1), maxLevel); 
+
+    filt_wv(i_wv, :, :) = y;
+        
+end

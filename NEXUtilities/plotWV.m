@@ -1,0 +1,106 @@
+function [meanWv] = plotWV( w, varargin )
+
+% function to plot a waveform
+
+% input arguments:
+%   w - waveform array (n x nf, where n = number of waveforms, nf = number
+%       of points per waveform)
+% variable arguments:
+%   'plotmean' - whether or not to plot the mean waveform (1 = yes, 2 = no)
+%       default = 1
+%   'wirestoplot' - wires to plot - [1 x n] array, where n = number of
+%       waveforms per timestamp to plot. Ex: [1 3] means plot waveforms for
+%       wires 1 and 3. Default = [1 : 4]
+%   'numwavs' - number of waveforms to plot; default is 50
+%   'Fs' - sampling rate. Default 31250
+%   'ptstoplot' - which points within the waveform to plot (1 x m array,
+%       where m is the number of points to plot. For example, for a 32
+%       point waveform, ptsToPlot = 5 : 30 would plot the 5th through 30th
+%       points). Default = 0 (plot all points)
+
+wv_per_ts = 4;    % waveforms per timestamp (4 for tetrode, 2 for stereotrode)
+wiresToPlot = 1 : 4;
+numWavs = 50;
+Fs = 31250;
+ptsToPlot = 0;
+meanLW = 1;
+meanColor = 'r';
+
+for iarg = 1 : 2 : nargin - 1
+    
+    switch lower(varargin{iarg})
+        
+        case 'plotmean',
+            plotMean = varargin{iarg + 1};
+            
+        case 'wirestoplot',
+            wiresToPlot = varargin{iarg + 1};
+            
+        case 'numwavs',
+            numWavs = varargin{iarg + 1};
+            
+        case 'Fs',
+            Fs = varargin{iarg + 1};
+            
+        case 'ptstoplot',
+            ptsToPlot = varargin{iarg + 1};
+            
+        case 'meancolor',
+            meanColor = varargin{iarg + 1};
+            
+    end    % end switch
+    
+end    % end for iarg...
+
+
+figure;
+set(gcf, 'color', 'w');
+
+totalWavs = size(w, 1);
+totalPts = size(w, 2);
+
+if totalWavs > numWavs
+    wvIdx = randperm(numWavs);
+else
+    wvIdx = [1 : totalWavs];
+    numWavs = totalWavs;
+end
+
+meanWv = mean(w);
+
+pts_per_wv = totalPts / wv_per_ts;   
+if ptsToPlot == 0
+    ptsToPlot = [1 : pts_per_wv];
+end    % end if ptsToPlot
+
+wvPts = zeros(wv_per_ts, pts_per_wv);
+for i = 1 : wv_per_ts
+    wvPts(i,:) = [((i-1) * pts_per_wv) + 1 : i * pts_per_wv];
+end
+
+for iWire = 1 : length( wiresToPlot )
+    
+    
+%    subplot(1,length(wiresToPlot),iWire);
+%    set(gca,'xticklabel','','yticklabel','','visible','off');
+    hold on;
+    x = wvPts(wiresToPlot(iWire), ptsToPlot) + (iWire - 1) * 5;
+    
+    if numWavs > 0
+        for iWv = 1 : numWavs
+            
+            
+            plot(x, w(wvIdx(iWv), wvPts(wiresToPlot(iWire),ptsToPlot)), 'color', [.5 .5 .5]);
+
+        end    % end for iWv...
+    end    % end if numWavs > 0
+    
+    plot(x, meanWv(wvPts(wiresToPlot(iWire),ptsToPlot)), 'color', meanColor, 'linewidth', meanLW);
+    
+    set(gca,'ylim',[-.0003 .0006]);
+    set(gca,'xticklabel','','yticklabel','','visible','off');
+    
+end
+    
+
+

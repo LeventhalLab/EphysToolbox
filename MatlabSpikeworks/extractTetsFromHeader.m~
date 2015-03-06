@@ -1,0 +1,6 @@
+function tetList = extractTetsFromHeader(hsdHeader)
+%
+% usage:
+%
+% INPUTS:
+%   
