@@ -1,4 +1,4 @@
-function nexData = TDTtoNex(nasPath,sessionName,varargin)
+function nexData = TDTtoNex(sessionName,nasPath,varargin)
 %
 % usage:
 %
@@ -22,24 +22,29 @@ function nexData = TDTtoNex(nasPath,sessionName,varargin)
 % OUTPUTS:
 %   none
 
-leventhalPaths = buildLeventhalPaths(nasPath,sessionName);
+[~, ratID] = sql_getSubjectFromSession(sessionName);
+nasPath = sql_findNASpath(ratID);
 
-tevInfo = dir(fullfile(leventhalPaths.session,'*.tev'));
+sessionTDTpath       = fullfile(nasPath, ratID, [ratID '-rawdata'], sessionName, sessionName);
+processedSessionPath = fullfile(nasPath, ratID, [ratID '-processed'], sessionName);
+
+cd(sessionTDTpath);
+tevInfo = dir('*.tev');
 if isempty(tevInfo)
     error('TDTtoNex_20141204:noTevFile', ['no tev file found for session ' sessionName]);
 end
 if length(tevInfo) > 1
     error('TDTtoNex_20141204:multipleTevFiles', ['more than one tev file found for session ' sessionName]);
 end
-tsqInfo = dir(fullfile(leventhalPaths.session,'*.tsq'));
+tsqInfo = dir('*.tsq');
 if isempty(tsqInfo)
     error('TDTtoNex_20141204:noTsqFile', ['no tsq file found for session ' sessionName]);
 end
 if length(tsqInfo) > 1
     error('TDTtoNex_20141204:multipleTsqFiles', ['more than one tsq file found for session ' sessionName]);
 end
-tevName = fullfile(leventhalPaths.session, tevInfo.name);
-tsqName = fullfile(leventhalPaths.session, tsqInfo.name);
+tevName = fullfile(sessionTDTpath, tevInfo.name);
+tsqName = fullfile(sessionTDTpath, tsqInfo.name);
 
 store_id2 = 'Vide';
 store_id = 'Wave';  % this is just an example
@@ -75,6 +80,7 @@ name2 = 256.^(0:3)*double(store_id2)';
 
 row2 = (name2 == nexData2.data.name);
 row = (name == nexData.data.name);
+
 
 table = { 'float',  1, 'float';
 'long',   1, 'int32';
@@ -126,6 +132,7 @@ end
     			 'line23On', 'line23Off', 'videoOn', 'videoOff'};
 
 
+	
 		% Set up the NEX file data structure
 		nexData.version = 1;
 		nexData.comment = 'Converted TDTtoNex. Alex Zotov, 2013';

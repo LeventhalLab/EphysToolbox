@@ -4,9 +4,9 @@ function locs = getSpikeLocations(data,validMask,Fs,onlyGoing)
 % [ ] save figures? Configs?
 
 nStd = 3;
+% suitable for action potentials
 windowSize = round(Fs/2400);
 snlePeriod = round(Fs/8000);
-showme = true;
 
 disp('Calculating SNLE data...')
 y_snle = snle(data,validMask,'windowSize',windowSize,'snlePeriod',snlePeriod);
@@ -27,6 +27,7 @@ elseif(strcmp(onlyGoing,'negative'))
 end
 disp([num2str(round(length(locs)/length(locsGoing)*100)),'% spikes going your way...']);
 
+showme = false;
 if(showme)
     disp('Showing you...')
     nSamples = min([400 length(locs)]);

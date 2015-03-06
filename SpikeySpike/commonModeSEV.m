@@ -1,4 +1,6 @@
 function cma=commonModeSEV(dataDir,exclude)
+% generates a single common mode averaged array that can be subtracted from
+% other data arrays to reduce system-wide artifact
 
 sevFiles = dir(fullfile(dataDir,'*.sev'));
 count = 1;
@@ -12,6 +14,6 @@ for i=1:length(sevFiles)
     if(count == 1)
         cma = sev;
     else
-        cma = mean([cma sev])
+        cma = mean([cma sev]);
     end
 end
