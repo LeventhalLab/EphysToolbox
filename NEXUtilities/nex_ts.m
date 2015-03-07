@@ -28,7 +28,7 @@ if(ischar(varname) == 0)
    return
 end
 
-if(length(filename) == 0)
+if(isempty(filename))
    [fname, pathname] = uigetfile('*.nex', 'Select a Nex file');
 	filename = strcat(pathname, fname);
 end
@@ -56,7 +56,7 @@ for i=1:nvar
 	name = fread(fid, [1 64], 'char');
 	offset = fread(fid, 1, 'int32');
 	n = fread(fid, 1, 'int32');
-	name = setstr(name);
+    name = char(name);
 	name = deblank(name);
 	k = strcmp(name, deblank(varname));
 	if(k == 1)

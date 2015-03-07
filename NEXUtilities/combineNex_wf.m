@@ -82,9 +82,12 @@ for iNex = 1 : length(nexfn)
                 % create a new neuron name based on the session name,
                 % site/tetrode identifier, and unit identifier (ie, a, b,
                 % c, etc.)
-                numCharsBeforeSite = length(sessionName) - 2;
-                unitID = curName(numCharsBeforeSite+1:end);
-                newUnitName = [sessionName '_' unitID];
+                
+                % this was not working, curName=T02_W01a, so...?
+%                 numCharsBeforeSite = length(sessionName) - 2;
+%                 unitID = curName(numCharsBeforeSite+1:end);
+%                 newUnitName = [sessionName '_' unitID];
+                newUnitName = [sessionName '_' curName]; %temp fix
                 
                 if ~isempty(nexData.neurons)
                     exitFlag = 0;

@@ -62,13 +62,12 @@ for iDir = 1 : numDirs
         nexNames{iNex} = nexList(iNex).name;
     end
     
-    % using the PLX file for Fs, this is upsampled (48828)
+    % using the PLX file for Fs
     plxName = dir('*.plx');
     if isempty(plxName); continue; end
     [~, ~, Fs, ~, ~, ~, ~, ~, ~, ~, ~, ~, ~] = plx_information(plxName(1).name);
     
-    combinedNex = combineNex_wf2012(nexNames, Fs, subdirs{iDir});
-
+    combinedNex = combineNex_wf(nexNames, Fs, subdirs{iDir});
     
     combinedNexName = [subdirs{iDir} '.nex'];
     finishedDirName = [subdirs{iDir} '_finished'];
@@ -76,12 +75,13 @@ for iDir = 1 : numDirs
         mkdir(finishedDirName);
     end
     
-    result = writeNexFile(combinedNex, fullfile(parentDir, subdirs{iDir}, finishedDirName, combinedNexName));
+    filePath = fullfile(parentDir, subdirs{iDir}, finishedDirName, combinedNexName);
+    save([filePath,'.mat'],'combinedNex','-v7.3');
+    result = writeNexFile(combinedNex,filePath);
     
     if result
         disp([combinedNexName ' successfully saved.']);
     else
         disp(['error saving ' combinedNexName]);
     end
-    
 end
