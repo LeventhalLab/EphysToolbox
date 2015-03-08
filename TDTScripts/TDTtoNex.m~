@@ -29,10 +29,8 @@ for iarg = 1 : 2 : nargin - 1
     end
 end
 
-if ~exist('nasPath','var')
-    sessionConf = exportSessionConf(sessionName);
-    nasPath = sessionConf.nasPath;
-end
+if exist('nasPath','var')
+sessionConf = exportSessionConf(sessionName);
 leventhalPaths = buildLeventhalPaths(nasPath,sessionName);
 
 tevInfo = dir(fullfile(leventhalPaths.session,'*.tev'));
