@@ -23,11 +23,12 @@ sumData = sum(data,1);
 if(strcmp(onlyGoing,'positive'))
     locsGoing = sumData(:,locs) > 0; %positive spikes
     locs = locs(locsGoing);
+    disp([num2str(round(length(locs)/length(locsGoing)*100)),'% spikes going positive...']);
 elseif(strcmp(onlyGoing,'negative'))
     locsGoing = sumData(:,locs) < 0; %negative spikes
     locs = locs(locsGoing);
+    disp([num2str(round(length(locs)/length(locsGoing)*100)),'% spikes going negative...']);
 end
-disp([num2str(round(length(locs)/length(locsGoing)*100)),'% spikes going your way...']);
 
 showme = false;
 if(showme)
