@@ -1,9 +1,10 @@
 function locs = getSpikeLocations(data,validMask,Fs,onlyGoing)
 % pre-process data: high pass -> artifact removal
 % data = nCh x nSamples
-% [ ] save figures? Configs?
+% [] save figures? Configs?
+% [] align actual spike peaks after getting y_snle
 
-nStd = 3;
+threshGain = 6.5;
 % suitable for action potentials
 windowSize = round(Fs/2400);
 snlePeriod = round(Fs/8000);
@@ -12,17 +13,18 @@ disp('Calculating SNLE data...')
 y_snle = snle(data,validMask,'windowSize',windowSize,'snlePeriod',snlePeriod);
 disp('Extracting peaks of summed SNLE data...')
 minpeakdist = Fs/1000; %hardcoded deadtime
-minpeakh = nStd * mean(std(y_snle,[],2)); %3 is good!
-locs = peakseek(sum(y_snle),minpeakdist,minpeakh);
+minpeakh = threshGain * mean(median(y_snle,2));
+locs = peakseek(sum(y_snle,1),minpeakdist,minpeakh);
 
-% this forces all lines to be negative for extracts, not sure that's a good
-% way to think about this feature
+% this just sums the lines, probably need to add in the valid mask or
+% handle this better in the future
 
-if(strcmp(onlyGoing,'positive')) 
-    locsGoing = min(data(:,locs)) > 0; %positive spikes
+sumData = sum(data,1);
+if(strcmp(onlyGoing,'positive'))
+    locsGoing = sumData(:,locs) > 0; %positive spikes
     locs = locs(locsGoing);
 elseif(strcmp(onlyGoing,'negative'))
-    locsGoing = max(data(:,locs)) < 0; %negative spikes
+    locsGoing = sumData(:,locs) < 0; %negative spikes
     locs = locs(locsGoing);
 end
 disp([num2str(round(length(locs)/length(locsGoing)*100)),'% spikes going your way...']);

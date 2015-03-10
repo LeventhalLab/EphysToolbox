@@ -34,6 +34,9 @@ if ~exist('nasPath','var')
     nasPath = sessionConf.nasPath;
 end
 leventhalPaths = buildLeventhalPaths(nasPath,sessionName);
+%session has double session name, should that really be session path?
+parts = strsplit(leventhalPaths.session,filesep);
+leventhalPaths.session = fullfile(filesep,parts{1:end-1});
 
 tevInfo = dir(fullfile(leventhalPaths.session,'*.tev'));
 if isempty(tevInfo)
@@ -132,7 +135,7 @@ linenames = {'cue1On','cue1Off', 'cue2On','cue2Off','cue3On','cue3Off','cue4On',
          'foodOn','foodOff', 'line08On','line08Off', 'nose1In', 'nose1Out', 'nose2In', 'nose2Out', ...
          'nose3In', 'nose3Out', 'nose4In', 'nose4Out','nose5In', 'nose5Out', 'foodportOn', 'foodportOff','line15On','line15Off', ...
          'line16On','line16Off', 'tone1On','tone1Off', 'tone2On','tone2Off', 'line19On', 'line19Off', 'gotrialOn','gotrialOff', 'line21On', 'line21Off', 'line22On', 'line22Off', ...
-         'line23On', 'line23Off', 'videoOn', 'videoOff'};
+         'line23On', 'line23Off', 'videoOn', 'videoOff','VoBlue','VoGreen','VpdBlue','VpdGreen'};
 
 % Set up the NEX file data structure
 nexData.version = 1;
