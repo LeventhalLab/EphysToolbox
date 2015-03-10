@@ -5,9 +5,6 @@ function data = artifactThresh(data,thresh)
     % waveform has to come back to baseline
     baseline = 50;
     for i=1:length(locs)
-        if(mod(i,round(length(locs)/10))==0)
-            disp([num2str(i),'/',num2str(length(locs)),' artifacts cured...']);
-        end
         % get quiet locations before/after artifact peak, this if/else
         % structure reduce computation time significantly
         if(i==1)
@@ -49,4 +46,5 @@ function data = artifactThresh(data,thresh)
             end
         end
     end
+    disp([num2str(length(locs)),' artifacts cured...']);
 end
