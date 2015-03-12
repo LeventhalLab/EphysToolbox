@@ -9,6 +9,7 @@ onlyGoing = 'none';
 windowSize = round(Fs/2400); %snle
 snlePeriod = round(Fs/8000); %snle
 minpeakdist = Fs/1000; %hardcoded deadtime
+threshGain = 8;
 
 for iarg = 1 : 2 : nargin - 3
     switch varargin{iarg}
@@ -18,25 +19,26 @@ for iarg = 1 : 2 : nargin - 3
             windowSize = varargin{iarg + 1};
         case 'minpeakdist'
             minpeakdist = varargin{iarg + 1};
+        case 'threshGain'
+            threshGain = varargin{iarg + 1};
     end
 end
 
 disp('Calculating SNLE data...')
 y_snle = snle(data,validMask,'windowSize',windowSize,'snlePeriod',snlePeriod);
 y_snle = bsxfun(@minus,y_snle,mean(y_snle,2)); %zero mean
-y_snle(y_snle < 0) = 0; %get rid of negative numbers
+minpeakh = threshGain * median(abs(y_snle),2);
 
 disp('Extracting peaks of summed SNLE data...')
-minpeakh = prctile(y_snle,99);
 locs = peakseek(sum(y_snle,1),minpeakdist,minpeakh);
 disp([num2str(length(locs)),' spikes found...']);
 
-% figure;
-% hs(1) = subplot(211);
-% plot(data);
-% hs(2) = subplot(212);
-% plot(sum(y_snle,1));
-% linkaxes(hs,'x');
+figure;
+hs(1) = subplot(211);
+plot(data);
+hs(2) = subplot(212);
+plot(sum(y_snle,1));
+linkaxes(hs,'x');
 
 % this just sums the lines, probably need to add in the valid mask or
 % handle this better in the future
