@@ -1,7 +1,7 @@
 function data = artifactThresh(data,thresh)
     % finds peaks above thresh
     locs = peakseek(abs(data),1,thresh);
-    disp([num2str(length(locs)),' artifacts found...']);
+%     disp([num2str(length(locs)),' artifacts found...']);
     % waveform has to come back to baseline
     baseline = 50;
     for i=1:length(locs)

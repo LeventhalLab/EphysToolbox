@@ -1,36 +1,57 @@
-function locs = getSpikeLocations(data,validMask,Fs,onlyGoing)
+function locs = getSpikeLocations(data,validMask,Fs,varargin)
 % pre-process data: high pass -> artifact removal
 % data = nCh x nSamples
 % [] save figures? Configs?
 % [] align actual spike peaks after getting y_snle
 
-threshGain = 6.5;
-% suitable for action potentials
-windowSize = round(Fs/2400);
-snlePeriod = round(Fs/8000);
+onlyGoing = 'none';
+
+windowSize = round(Fs/2400); %snle
+snlePeriod = round(Fs/8000); %snle
+minpeakdist = Fs/1000; %hardcoded deadtime
+
+for iarg = 1 : 2 : nargin - 3
+    switch varargin{iarg}
+        case 'onlyGoing'
+            onlyGoing = varargin{iarg + 1};
+        case 'windowSize'
+            windowSize = varargin{iarg + 1};
+        case 'minpeakdist'
+            minpeakdist = varargin{iarg + 1};
+    end
+end
 
 disp('Calculating SNLE data...')
 y_snle = snle(data,validMask,'windowSize',windowSize,'snlePeriod',snlePeriod);
+y_snle = bsxfun(@minus,y_snle,mean(y_snle,2)); %zero mean
+y_snle(y_snle < 0) = 0; %get rid of negative numbers
+
 disp('Extracting peaks of summed SNLE data...')
-minpeakdist = Fs/1000; %hardcoded deadtime
-minpeakh = threshGain * mean(median(y_snle,2));
+minpeakh = prctile(y_snle,99);
 locs = peakseek(sum(y_snle,1),minpeakdist,minpeakh);
+disp([num2str(length(locs)),' spikes found...']);
+
+% figure;
+% hs(1) = subplot(211);
+% plot(data);
+% hs(2) = subplot(212);
+% plot(sum(y_snle,1));
+% linkaxes(hs,'x');
 
 % this just sums the lines, probably need to add in the valid mask or
 % handle this better in the future
-
-sumData = sum(data,1);
-if(strcmp(onlyGoing,'positive'))
-    locsGoing = sumData(:,locs) > 0; %positive spikes
+if(strcmpi(onlyGoing,'positive') || strcmpi(onlyGoing,'negative'))
+    sumData = sum(data,1);
+    if(strcmp(onlyGoing,'positive'))
+        locsGoing = sumData(:,locs) > 0; %positive spikes
+    elseif(strcmp(onlyGoing,'negative'))
+        locsGoing = sumData(:,locs) < 0; %negative spikes
+    end
     locs = locs(locsGoing);
-    disp([num2str(round(length(locs)/length(locsGoing)*100)),'% spikes going positive...']);
-elseif(strcmp(onlyGoing,'negative'))
-    locsGoing = sumData(:,locs) < 0; %negative spikes
-    locs = locs(locsGoing);
-    disp([num2str(round(length(locs)/length(locsGoing)*100)),'% spikes going negative...']);
+    disp([num2str(round(length(locs)/length(locsGoing)*100)),'% spikes going ',onlyGoing,'...']);
 end
 
-showme = false;
+showme = true;
 if(showme)
     disp('Showing you...')
     nSamples = min([400 length(locs)]);
