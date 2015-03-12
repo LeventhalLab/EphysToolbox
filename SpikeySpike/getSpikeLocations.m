@@ -27,18 +27,18 @@ end
 disp('Calculating SNLE data...')
 y_snle = snle(data,validMask,'windowSize',windowSize,'snlePeriod',snlePeriod);
 y_snle = bsxfun(@minus,y_snle,mean(y_snle,2)); %zero mean
-minpeakh = threshGain * median(abs(y_snle),2);
+minpeakh = threshGain * mean(median(abs(y_snle),2));
 
 disp('Extracting peaks of summed SNLE data...')
 locs = peakseek(sum(y_snle,1),minpeakdist,minpeakh);
 disp([num2str(length(locs)),' spikes found...']);
 
-figure;
-hs(1) = subplot(211);
-plot(data);
-hs(2) = subplot(212);
-plot(sum(y_snle,1));
-linkaxes(hs,'x');
+% figure;
+% hs(1) = subplot(211);
+% plot(data(1,:));
+% hs(2) = subplot(212);
+% plot(sum(y_snle(1,:),1));
+% linkaxes(hs,'x');
 
 % this just sums the lines, probably need to add in the valid mask or
 % handle this better in the future
@@ -53,7 +53,7 @@ if(strcmpi(onlyGoing,'positive') || strcmpi(onlyGoing,'negative'))
     disp([num2str(round(length(locs)/length(locsGoing)*100)),'% spikes going ',onlyGoing,'...']);
 end
 
-showme = true;
+showme = false;
 if(showme)
     disp('Showing you...')
     nSamples = min([400 length(locs)]);
