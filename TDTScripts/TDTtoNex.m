@@ -36,7 +36,8 @@ end
 leventhalPaths = buildLeventhalPaths(nasPath,sessionName);
 %session has double session name, should that really be session path?
 parts = strsplit(leventhalPaths.session,filesep);
-leventhalPaths.session = fullfile(filesep,parts{1:end-1});
+%fix this shit! needs to be the root R0036_20150225a folder
+%leventhalPaths.session = fullfile(filesep,parts{1:end-1});
 
 tevInfo = dir(fullfile(leventhalPaths.session,'*.tev'));
 if isempty(tevInfo)
