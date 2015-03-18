@@ -1,19 +1,15 @@
 function data = artifactThresh(data,validMask,thresh)
-    % finds peaks above thresh of combined channels
-    seekData = zeros(1,size(data,2));
-    seekCount = 1;
+    % finds peaks in all channels and combine those locations so that each
+    % channel attempts to set that span to zero
+    locs = [];
     for ii=1:size(data,1)
         if ~validMask(ii)
             continue;
         end
-        if seekCount == 1
-            seekData = abs(data(ii,:));
-        else
-            seekData = mean([seekData;abs(data(ii,:))]);
-        end
-        seekCount = seekCount + 1;
+        tlocs = peakseek(abs(data(ii,:)),1,thresh);
+        locs = [locs tlocs];
     end
-    locs = peakseek(seekData,1,thresh);
+    locs = sort(locs);
 
     % waveform has to come back to baseline
     baseline = 50;
