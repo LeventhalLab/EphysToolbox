@@ -1,4 +1,4 @@
-function nexData = TDTtoNex(sessionName,varargin)
+function nexData = TDTtoNex(sessionConf)
 %
 % usage:
 %
@@ -22,39 +22,25 @@ function nexData = TDTtoNex(sessionName,varargin)
 % OUTPUTS:
 %   none
 
-for iarg = 1 : 2 : nargin - 1
-    switch varargin{iarg}
-        case 'nasPath'
-            nasPath = varargin{iarg + 1};
-    end
-end
 
-if ~exist('nasPath','var')
-    sessionConf = exportSessionConf(sessionName);
-    nasPath = sessionConf.nasPath;
-end
-leventhalPaths = buildLeventhalPaths(nasPath,sessionName);
-%session has double session name, should that really be session path?
-parts = strsplit(leventhalPaths.session,filesep);
-%fix this shit! needs to be the root R0036_20150225a folder
-%leventhalPaths.session = fullfile(filesep,parts{1:end-1});
+leventhalPaths = buildLeventhalPaths(sessionConf);
 
-tevInfo = dir(fullfile(leventhalPaths.session,'*.tev'));
+tevInfo = dir(fullfile(leventhalPaths.rawdata,'*.tev'));
 if isempty(tevInfo)
-    error('TDTtoNex_20141204:noTevFile', ['no tev file found for session ' sessionName]);
+    error('TDTtoNex_20141204:noTevFile', ['no tev file found for session ' sessionConf.sessionName]);
 end
 if length(tevInfo) > 1
-    error('TDTtoNex_20141204:multipleTevFiles', ['more than one tev file found for session ' sessionName]);
+    error('TDTtoNex_20141204:multipleTevFiles', ['more than one tev file found for session ' sessionConf.sessionName]);
 end
-tsqInfo = dir(fullfile(leventhalPaths.session,'*.tsq'));
+tsqInfo = dir(fullfile(leventhalPaths.rawdata,'*.tsq'));
 if isempty(tsqInfo)
-    error('TDTtoNex_20141204:noTsqFile', ['no tsq file found for session ' sessionName]);
+    error('TDTtoNex_20141204:noTsqFile', ['no tsq file found for session ' sessionConf.sessionName]);
 end
 if length(tsqInfo) > 1
-    error('TDTtoNex_20141204:multipleTsqFiles', ['more than one tsq file found for session ' sessionName]);
+    error('TDTtoNex_20141204:multipleTsqFiles', ['more than one tsq file found for session ' sessionConf.sessionName]);
 end
-tevName = fullfile(leventhalPaths.session, tevInfo.name);
-tsqName = fullfile(leventhalPaths.session, tsqInfo.name);
+tevName = fullfile(leventhalPaths.rawdata, tevInfo.name);
+tsqName = fullfile(leventhalPaths.rawdata, tsqInfo.name);
 
 store_id2 = 'Vide';
 store_id = 'Wave';  % this is just an example
@@ -245,7 +231,7 @@ nexData.events{48}.timestamps = nexData2.events{52}.timestamps;
 
 nexData.events = nexData.events';
 nexData.tend = nexData.raw.chan_info(end,1);
-filePath = fullfile(leventhalPaths.processed,[sessionName '.box.nex']);
+filePath = fullfile(leventhalPaths.processed,[sessionConf.sessionName '.box.nex']);
 save([filePath,'.mat'],'nexData','-v7.3');
 writeNexFile(nexData, filePath);
 fclose(tev);

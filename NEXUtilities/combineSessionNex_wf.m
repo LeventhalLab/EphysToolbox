@@ -67,7 +67,7 @@ for iDir = 1 : numDirs
     if isempty(plxName); continue; end
     [~, ~, Fs, ~, ~, ~, ~, ~, ~, ~, ~, ~, ~] = plx_information(plxName(1).name);
     
-    combinedNex = combineNex_wf(nexNames, Fs, subdirs{iDir});
+    nexStruct = combineNex_wf(nexNames, Fs, subdirs{iDir});
     
     combinedNexName = [subdirs{iDir} '.nex'];
     finishedDirName = [subdirs{iDir} '_finished'];
@@ -76,8 +76,8 @@ for iDir = 1 : numDirs
     end
     
     filePath = fullfile(parentDir, subdirs{iDir}, finishedDirName, combinedNexName);
-    save([filePath,'.mat'],'combinedNex','-v7.3');
-    result = writeNexFile(combinedNex,filePath);
+    save([filePath,'.mat'],'nexStruct','-v7.3');
+    result = writeNexFile(nexStruct,filePath);
     
     if result
         disp([combinedNexName ' successfully saved.']);
