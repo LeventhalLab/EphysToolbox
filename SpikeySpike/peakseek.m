@@ -1,4 +1,4 @@
-function [locs pks]=peakseek(x,minpeakdist,minpeakh)
+function [locs, pks]=peakseek(x,minpeakdist,minpeakh)
 % Alternative to the findpeaks function.  This thing runs much much faster.
 % It really leaves findpeaks in the dust.  It also can handle ties between
 % peaks.  Findpeaks just erases both in a tie.  Shame on findpeaks.

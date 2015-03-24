@@ -10,6 +10,7 @@ windowSize = round(Fs/2400); %snle
 snlePeriod = round(Fs/8000); %snle
 minpeakdist = Fs/1000; %hardcoded deadtime
 threshGain = 8;
+showMe = 0;
 
 for iarg = 1 : 2 : nargin - 3
     switch varargin{iarg}
@@ -21,6 +22,8 @@ for iarg = 1 : 2 : nargin - 3
             minpeakdist = varargin{iarg + 1};
         case 'threshGain'
             threshGain = varargin{iarg + 1};
+        case 'showMe'
+            showMe = varargin{iarg + 1};
     end
 end
 
@@ -53,8 +56,7 @@ if(strcmpi(onlyGoing,'positive') || strcmpi(onlyGoing,'negative'))
     disp([num2str(round(length(locs)/length(locsGoing)*100)),'% spikes going ',onlyGoing,'...']);
 end
 
-showme = false;
-if(showme)
+if(showMe)
     disp('Showing you...')
     nSamples = min([400 length(locs)]);
     locWindow = 20;
