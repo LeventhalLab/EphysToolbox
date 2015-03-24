@@ -3,21 +3,23 @@ function [burstEpochs,burstFreqs]=findBursts(ts)
 % [] allow for multiple classes of bursting?
 histBin = 100;
 
-figure('position',[0 0 800 400]);
-subplot(211);
+figure('position',[0 0 800 900]);
+subplot(411);
 [counts,centers] = hist(diff(ts),histBin);
 bar(centers,counts,'edgeColor','none');
 xlim([0 max(centers)]);
 xlabel('ISI');
 ylabel('events');
+title('diff(ts)');
 
-subplot(212);
+subplot(412);
 [logCounts,logCenters] = hist(log(diff(ts)),histBin);
 semilogx(exp(logCenters),logCounts);
 grid on;
 xlim([0 max(exp(logCenters))]);
 xlabel('log(ISI)');
 ylabel('events');
+title('log(diff(ts))');
 
 disp('Select burst peak-valley-peak...')
 [xBursts,~] = ginput
@@ -53,17 +55,28 @@ tsDiff = tsBursts(:,2) - tsBursts(:,1);
 burstPeriods = tsDiff ./ (burstEpochs(:,2)-burstEpochs(:,1));
 burstFreqs = 1 ./ burstPeriods;
 
-figure('position',[500 500 800 150]);
+hs(1) = subplot(413);
 plotSpikeRaster({ts},'PlotType','vertline');
 for ii=1:length(burstEpochs)
     hold on;
     plot([ts(burstEpochs(ii,1)) ts(burstEpochs(ii,2))],[1 1],'r','lineWidth',3);
 end
+xlabel('time');
+ylabel('unit');
+title('spike raster');
+
+hs(2) = subplot(414);
+bar(ts(burstEpochs(:,1)),burstFreqs);
+xlabel('time');
+ylabel('frequency (Hz)');
+title('intra-burst frequency');
+
+linkaxes(hs,'x');
 
 disp(char(repmat(46,1,20)));
 disp('BURST SUMMARY');
 disp(['Bursts detected: ',num2str(length(burstEpochs))]);
-disp(['Mean burst ISI: ',num2str(mean(burstEpochs(:,2)-burstEpochs(:,1)))]);
-disp(['Mean burst frequency: ',num2str(mean(burstFreqs))]);
-disp(['Void parameter: ',num2str(1-(xBurst(2)/sqrt(xBurst(1)*xBurst(3))))]);
+disp(['Mean spikes per burst: ',num2str(mean(burstEpochs(:,2)-burstEpochs(:,1)))]);
+disp(['Mean burst frequency: ',num2str(mean(burstFreqs)),' Hz']);
+disp(['Void parameter: ',num2str(1-(xBursts(2)/sqrt(xBursts(1)*xBursts(3))))]);
 disp(char(repmat(46,1,20)));
