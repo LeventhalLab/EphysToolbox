@@ -61,13 +61,13 @@ for ii=1:length(burstEpochs)
     hold on;
     plot([ts(burstEpochs(ii,1)) ts(burstEpochs(ii,2))],[1 1],'r','lineWidth',3);
 end
-xlabel('time');
+xlabel('time (s)');
 ylabel('unit');
 title('spike raster');
 
 hs(2) = subplot(414);
 bar(ts(burstEpochs(:,1)),burstFreqs);
-xlabel('time');
+xlabel('time (s)');
 ylabel('frequency (Hz)');
 title('intra-burst frequency');
 
@@ -76,7 +76,8 @@ linkaxes(hs,'x');
 disp(char(repmat(46,1,20)));
 disp('BURST SUMMARY');
 disp(['Bursts detected: ',num2str(length(burstEpochs))]);
-disp(['Mean spikes per burst: ',num2str(mean(burstEpochs(:,2)-burstEpochs(:,1)))]);
+disp(['Mean spikes per burst: ',num2str(mean((burstEpochs(:,2)-burstEpochs(:,1))+1))]);
+disp(['Std spikes per burst: ',num2str(std((burstEpochs(:,2)-burstEpochs(:,1))+1))]);
 disp(['Mean burst frequency: ',num2str(mean(burstFreqs)),' Hz']);
 disp(['Void parameter: ',num2str(1-(xBursts(2)/sqrt(xBursts(1)*xBursts(3))))]);
 disp(char(repmat(46,1,20)));
