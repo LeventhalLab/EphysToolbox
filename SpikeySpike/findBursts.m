@@ -4,15 +4,16 @@ function [burstEpochs,burstFreqs]=findBursts(ts)
 histBin = 100;
 
 figure('position',[0 0 800 900]);
-subplot(411);
+subplot(511);
 [counts,centers] = hist(diff(ts),histBin);
 bar(centers,counts,'edgeColor','none');
-xlim([0 max(centers)]);
+% xlim([0 max(centers)]);
+xlim([0 0.2]);
 xlabel('ISI');
 ylabel('events');
 title('diff(ts)');
 
-subplot(412);
+subplot(512);
 [logCounts,logCenters] = hist(log(diff(ts)),histBin);
 semilogx(exp(logCenters),logCounts);
 grid on;
@@ -55,7 +56,7 @@ tsDiff = tsBursts(:,2) - tsBursts(:,1);
 burstPeriods = tsDiff ./ (burstEpochs(:,2)-burstEpochs(:,1));
 burstFreqs = 1 ./ burstPeriods;
 
-hs(1) = subplot(413);
+hs(1) = subplot(513);
 plotSpikeRaster({ts},'PlotType','vertline');
 for ii=1:length(burstEpochs)
     hold on;
@@ -65,13 +66,36 @@ xlabel('time (s)');
 ylabel('unit');
 title('spike raster');
 
-hs(2) = subplot(414);
+hs(2) = subplot(514);
 bar(ts(burstEpochs(:,1)),burstFreqs);
 xlabel('time (s)');
 ylabel('frequency (Hz)');
-title('intra-burst frequency');
+title('intra-burst firing frequency');
+
+
+hs(3) = subplot(515);
+histBin = histBin * 3;
+[counts,centers] = hist(ts,histBin);
+bar(centers,counts/(max(ts)/histBin),'edgeColor','none');
+tsMinusBursts = ts;
+tsMinusBursts(bursts) = [];
+[counts,centers] = hist(tsMinusBursts,histBin);
+hold on;
+bar(centers,counts/(max(ts)/histBin),'edgeColor','none','faceColor','red');
+xlim([0 max(centers)]);
+xlabel('time (s)');
+ylabel('frequency (Hz)');
+title('raw firing frequency');
+legend('all data','minus bursts');
 
 linkaxes(hs,'x');
+
+str = {['Bursts detected: ',num2str(length(burstEpochs))],...
+    ['Mean spikes per burst: ',num2str(mean((burstEpochs(:,2)-burstEpochs(:,1))+1))],...
+    ['Std spikes per burst: ',num2str(std((burstEpochs(:,2)-burstEpochs(:,1))+1))],...
+    ['Mean burst frequency: ',num2str(mean(burstFreqs)),' Hz'],...
+    ['Void parameter: ',num2str(1-(xBursts(2)/sqrt(xBursts(1)*xBursts(3))))]};
+annotation('textbox', [.1 .9 .9 .1],'String', str, 'edgeColor','none');
 
 disp(char(repmat(46,1,20)));
 disp('BURST SUMMARY');
