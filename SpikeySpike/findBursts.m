@@ -1,6 +1,8 @@
 function [burstEpochs,burstFreqs]=findBursts(ts)
 % [] intraburst frequency
 % [] allow for multiple classes of bursting?
+% 1) [nvar, names, types] = nex_info(filename)
+% 2) [n, ts] = nex_ts(filename, varname)
 histBin = 100;
 
 figure('position',[0 0 800 900]);
