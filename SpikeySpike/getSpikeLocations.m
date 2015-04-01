@@ -59,16 +59,18 @@ end
 if(showMe)
     disp('Showing you...')
     nSamples = min([400 length(locs)]);
-    locWindow = 20;
+    locWindow = 40;
+    t = linspace(0,(locWindow*2)/Fs,locWindow*2)*1e3;
     someLocs = datasample(locs,nSamples); % random samples
     for i=1:size(data,1)
         figure;
         for j=1:length(someLocs)
-            plot(data(i,someLocs(j)-locWindow:someLocs(j)+locWindow));
+            plot(t,data(i,someLocs(j)-locWindow:someLocs(j)+locWindow-1));
             hold on;
         end
         title(['data row',num2str(i),' - ',num2str(nSamples),' samples']);
-        xlabel('samples')
-        ylabel('amplitude')
+        xlabel('time (ms)')
+        ylabel('uV')
+        xlim([0 max(t)]);
     end
 end
