@@ -37,6 +37,7 @@ bursts = find(diff(ts) > 0 & diff(ts) <= xBursts(2));
 burstEpochs = [];
 burstCount = 1;
 for ii=1:length(bursts)
+%     disp(ii);
     if ii == 1
         burstEpochs(burstCount,1) = bursts(ii);
     else
@@ -48,9 +49,13 @@ for ii=1:length(bursts)
             burstEpochs(burstCount,1) = bursts(ii);
         end
     end
-    if ii == length(bursts)
-        burstEpochs(burstCount,2) = burstEpochs(burstCount,1) + 1;
+    if(ii>1000)
+        disp(ii)
     end
+end
+
+if burstEpochs(burstCount,2) == 0
+    burstEpochs(burstCount,2) = burstEpochs(burstCount,1) + 1;
 end
 
 tsBursts = ts(burstEpochs);
