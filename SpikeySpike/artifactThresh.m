@@ -1,6 +1,7 @@
 function data = artifactThresh(data,validMask,thresh)
     % finds peaks in all channels and combine those locations so that each
     % channel attempts to set that span to zero
+    %Hannah was here
     locs = [];
     for ii=1:size(data,1)
         if ~validMask(ii)
