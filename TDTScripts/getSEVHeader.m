@@ -20,13 +20,14 @@ function header = getSEVHeader(filename)
 %       .rate: 2
 %       .Fs - sampling rate
 
-% NEED TO UPDATE THE DOCUMENTATION FOR THIS FUNCTION ABOVE
 
 data = [];
 ALLOWED_FORMATS = {'single','int32','int16','int8','double','int64'};
 MAP = containers.Map(...
     0:length(ALLOWED_FORMATS)-1,...
     ALLOWED_FORMATS);
+
+%open the file that was input
 fid = fopen(filename, 'rb');
 
 % create and fill streamHeader struct

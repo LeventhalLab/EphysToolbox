@@ -28,14 +28,20 @@ for iarg = 1 : 2 : nargin - 3
 end
 
 disp('Calculating SNLE data...')
+%Find smooth non-linear energy
 y_snle = snle(data,validMask,'windowSize',windowSize,'snlePeriod',snlePeriod);
+
+%subtract the mean snle value from the snle value
 y_snle = bsxfun(@minus,y_snle,mean(y_snle,2)); %zero mean
+
+%Calculate the minimum peak height
 minpeakh = threshGain * mean(median(abs(y_snle),2));
 
 disp('Extracting peaks of summed SNLE data...')
 locs = peakseek(sum(y_snle,1),minpeakdist,minpeakh);
 disp([num2str(length(locs)),' spikes found...']);
 
+% plot the raw data and smooth non linear energy
 % figure;
 % hs(1) = subplot(211);
 % plot(data(1,:));

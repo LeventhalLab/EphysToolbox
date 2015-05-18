@@ -1,7 +1,7 @@
 function data = artifactThresh(data,validMask,thresh)
     % finds peaks in all channels and combine those locations so that each
     % channel attempts to set that span to zero
-    %Hannah was here
+    
     locs = [];
     for ii=1:size(data,1)
         if ~validMask(ii)
@@ -10,6 +10,8 @@ function data = artifactThresh(data,validMask,thresh)
         tlocs = peakseek(abs(data(ii,:)),1,thresh);
         locs = [locs tlocs];
     end
+    
+    %put the locations in order
     locs = sort(locs);
 
     % waveform has to come back to baseline
