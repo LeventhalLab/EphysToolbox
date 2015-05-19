@@ -9,8 +9,8 @@ onlyGoing = 'none';
 windowSize = round(Fs/2400); %snle
 snlePeriod = round(Fs/8000); %snle
 minpeakdist = Fs/1000; %hardcoded deadtime
-threshGain = 8;
-showMe = 0;
+threshGain = 15;
+showMe = 1;
 
 for iarg = 1 : 2 : nargin - 3
     switch varargin{iarg}
@@ -49,8 +49,6 @@ disp([num2str(length(locs)),' spikes found...']);
 % plot(sum(y_snle(1,:),1));
 % linkaxes(hs,'x');
 
-% this just sums the lines, probably need to add in the valid mask or
-% handle this better in the future
 if(strcmpi(onlyGoing,'positive') || strcmpi(onlyGoing,'negative'))
     sumData = sum(data,1);
     if(strcmp(onlyGoing,'positive'))
