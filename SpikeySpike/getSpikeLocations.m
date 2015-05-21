@@ -41,7 +41,7 @@ standardDev = std(y_snle,0, 2);
 %Calculate the minimum peak height
 minpeakhmed = threshGain * median(abs(y_snle_zeroed),2);
 
-minpeakhstd = standardDev*6 + ave;
+minpeakhstd = standardDev*4 + ave;
 
 
 %rawLocs = cell(4,1);
@@ -58,48 +58,141 @@ t = linspace(0, length(data(1,:))/Fs, length(data(1,:)));
 % plot the raw data and smooth non linear energy
  figure;
  zoom on
- hs(1) = subplot(411);
+ a(1) = subplot(221);
  plot(t, data(1,:)); 
  hold on
  plot((rawLocsstd{1}(1,:))/Fs, data(1,(rawLocsstd{1}(1,:))), '*')
- title('Wire 1 Raw Data (standard deviation)');
+ title('Tetrode 4 Wire 1 Raw Data (standard deviation)');
  xlabel('time');
  ylabel('uV');
- ylim([-200, 200]);
- hs(2) = subplot(412);
+ %ylim([-400, 200]);
+ b(1) = subplot(223);
  plot(t, y_snle(1,:));
  hold on
  plot((rawLocsstd{1}(1,:)/Fs),y_snle(1,(rawLocsstd{1}(1,:))), '*')
- title('Wire 1 SNLE (standard deviation)');
+ title('Tetrode 4 Wire 1 SNLE (standard deviation)');
  xlabel('time');
- 
- hs(1) = subplot(413);
+ a(2) = subplot(222);
  plot(t, data(1,:)); 
  hold on
  plot((rawLocsmed{1}(1,:))/Fs, data(1,(rawLocsmed{1}(1,:))), '*')
- title('Wire 1 Raw Data (median)');
+ title('Tetrode 4 Wire 1 Raw Data (median)');
  xlabel('time');
  ylabel('uV');
- ylim([-200, 200]);
- hs(2) = subplot(414);
+ %ylim([-400, 200]);
+ b(2) = subplot(224);
  plot(t, y_snle_zeroed(1,:));
  hold on
  plot((rawLocsmed{1}(1,:)/Fs),y_snle_zeroed(1,(rawLocsmed{1}(1,:))), '*')
- title('Wire 1 SNLE (using median)');
+ title('Tetrode 4 Wire 1 SNLE (using median)');
  xlabel('time');
- linkaxes(hs, 'x');
-
+ linkaxes(a);
+ linkaxes(b);
+ linkaxes([a,b],'x');
  
- %hs(2) = subplot(412);
- %plot(data(2,1:50)); hold on
- %plot(locs{2},60, '*'); 
- %hs(3) = subplot(413);
- %plot(data(3,1:50)); hold on
- %plot(locs{3},60, '*'); 
- %hs(4) = subplot(414);
- %plot(data(4,1:50)); hold on
- %plot(locs{4},60, '*');
- %linkaxes(hs,'x');
+  
+ figure;
+ zoom on
+ a(1) = subplot(221);
+ plot(t, data(2,:)); 
+ hold on
+ plot((rawLocsstd{2}(1,:))/Fs, data(2,(rawLocsstd{2}(1,:))), '*')
+ title('Tetrode 4 Wire 2 Raw Data (standard deviation)');
+ xlabel('time');
+ ylabel('uV');
+ %ylim([-400, 200]);
+ b(1) = subplot(223);
+ plot(t, y_snle(2,:));
+ hold on
+ plot((rawLocsstd{2}(1,:)/Fs),y_snle(2,(rawLocsstd{2}(1,:))), '*')
+ title('Tetrode 4 Wire 2 SNLE (standard deviation)');
+ xlabel('time');
+ a(2) = subplot(222);
+ plot(t, data(2,:)); 
+ hold on
+ plot((rawLocsmed{2}(1,:))/Fs, data(2,(rawLocsmed{2}(1,:))), '*')
+ title('Tetrode 4 Wire 2 Raw Data (median)');
+ xlabel('time');
+ ylabel('uV');
+ %ylim([-400, 200]);
+ b(2) = subplot(224);
+ plot(t, y_snle_zeroed(2,:));
+ hold on
+ plot((rawLocsmed{2}(1,:)/Fs),y_snle_zeroed(2,(rawLocsmed{2}(1,:))), '*')
+ title('Tetrode 4 Wire 2 SNLE (using median)');
+ xlabel('time');
+ linkaxes(a);
+ linkaxes(b);
+ linkaxes([a,b],'x');
+  
+ figure;
+ zoom on
+ a(1) = subplot(221);
+ plot(t, data(3,:)); 
+ hold on
+ plot((rawLocsstd{3}(1,:))/Fs, data(3,(rawLocsstd{3}(1,:))), '*')
+ title('Tetrode 4 Wire 3 Raw Data (standard deviation)');
+ xlabel('time');
+ ylabel('uV');
+ %ylim([-400, 200]);
+ b(1) = subplot(223);
+ plot(t, y_snle(3,:));
+ hold on
+ plot((rawLocsstd{3}(1,:)/Fs),y_snle(3,(rawLocsstd{3}(1,:))), '*')
+ title('Tetrode 4 Wire 3 SNLE (standard deviation)');
+ xlabel('time');
+ a(2) = subplot(222);
+ plot(t, data(1,:)); 
+ hold on
+ plot((rawLocsmed{3}(1,:))/Fs, data(3,(rawLocsmed{3}(1,:))), '*')
+ title('Tetrode 4 Wire 3 Raw Data (median)');
+ xlabel('time');
+ ylabel('uV');
+ %ylim([-400, 200]);
+ b(2) = subplot(224);
+ plot(t, y_snle_zeroed(3,:));
+ hold on
+ plot((rawLocsmed{3}(1,:)/Fs),y_snle_zeroed(3,(rawLocsmed{3}(1,:))), '*')
+ title('Tetrode 4 Wire 3 SNLE (using median)');
+ xlabel('time');
+ linkaxes(a);
+ linkaxes(b);
+ linkaxes([a,b],'x');
+ 
+ figure;
+ zoom on
+ a(1) = subplot(221);
+ plot(t, data(4,:)); 
+ hold on
+ plot((rawLocsstd{4}(1,:))/Fs, data(4,(rawLocsstd{4}(1,:))), '*')
+ title('Tetrode 4 Wire 4 Raw Data (standard deviation)');
+ xlabel('time');
+ ylabel('uV');
+ %ylim([-400, 200]);
+ b(1) = subplot(223);
+ plot(t, y_snle(4,:));
+ hold on
+ plot((rawLocsstd{4}(1,:)/Fs),y_snle(4,(rawLocsstd{4}(1,:))), '*')
+ title('Tetrode 4 Wire 4 SNLE (standard deviation)');
+ xlabel('time');
+ a(2) = subplot(222);
+ plot(t, data(4,:)); 
+ hold on
+ plot((rawLocsmed{4}(1,:))/Fs, data(4,(rawLocsmed{4}(1,:))), '*')
+ title('Tetrode 4 Wire 4 Raw Data (median)');
+ xlabel('time');
+ ylabel('uV');
+ %ylim([-400, 200]);
+ b(2) = subplot(224);
+ plot(t, y_snle_zeroed(4,:));
+ hold on
+ plot((rawLocsmed{4}(1,:)/Fs),y_snle_zeroed(4,(rawLocsmed{4}(1,:))), '*')
+ title('Tetrode 4 Wire 4 SNLE (using median)');
+ xlabel('time');
+ linkaxes(a);
+ linkaxes(b);
+ linkaxes([a,b],'x');
+
  
  
  %minLength = min([length(rawLocs{1}(1,:)) length(rawLocs{2}(1,:)) length(rawLocs{3}(1,:)) length(rawLocs{4}(1,:))]);
