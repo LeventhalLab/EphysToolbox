@@ -87,7 +87,9 @@ for iNex = 1 : length(nexfn)
 %                 numCharsBeforeSite = length(sessionName) - 2;
 %                 unitID = curName(numCharsBeforeSite+1:end);
 %                 newUnitName = [sessionName '_' unitID];
-                newUnitName = [sessionName '_' curName]; %temp fix
+                
+                %temp fix, added iNex so this works with single channel sorting
+                newUnitName = [sessionName,'_',curName,'_',num2str(iNex)]; 
                 
                 if ~isempty(nexData.neurons)
                     exitFlag = 0;
