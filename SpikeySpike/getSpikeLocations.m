@@ -1,4 +1,4 @@
-function ysnleLocs = getSpikeLocations(data,validMask,Fs,varargin)
+function allLocs = getSpikeLocations(data,validMask,Fs,varargin)
     % pre-process data: bandpass -> artifact removal
     % data = nCh x nSamples
     % [] save figures? Configs?
@@ -88,7 +88,7 @@ function ysnleLocs = getSpikeLocations(data,validMask,Fs,varargin)
 
         hs(1) = subplot(211);
         title('Filtered Data');
-        xlabel('samples');
+        xlabel('sample');
         ylabel('uV')
         hold on;
         h(validWireCount) = plot(data(ii,:),'color',defaultColors(validWireCount,:));
@@ -97,7 +97,7 @@ function ysnleLocs = getSpikeLocations(data,validMask,Fs,varargin)
 
         hs(2) = subplot(212);
         title('SNLE');
-        xlabel('samples');
+        xlabel('sample');
         ylabel('SNLE')
         hold on;
         plot(y_snle(ii,:),'color',defaultColors(validWireCount,:));
@@ -122,7 +122,7 @@ function ysnleLocs = getSpikeLocations(data,validMask,Fs,varargin)
         
         subplot(length(find(validMask>0)),1,validWireCount);
         title(['Wire ',num2str(ii)]);
-        xlabel('samples');
+        xlabel('sample');
         ylabel('uV')
         hold on;
         plotSpikes = min([length(allLocs) 400]);
