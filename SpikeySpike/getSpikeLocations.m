@@ -1,7 +1,6 @@
 function allLocs = getSpikeLocations(data,validMask,Fs,varargin)
-    % pre-process data: bandpass -> artifact removal
     % data = nCh x nSamples
-    % [] save figures? Configs?
+    % allLocs = 1 x nLocs
 
     onlyGoing = 'none';
 
@@ -9,7 +8,6 @@ function allLocs = getSpikeLocations(data,validMask,Fs,varargin)
     snlePeriod = round(Fs/8000); %snle
     minpeakdist = Fs/1000; %hardcoded deadtime
     threshGain = 15;
-    showMe = 0;
 
     for iarg = 1 : 2 : nargin - 3
         switch varargin{iarg}
@@ -21,8 +19,10 @@ function allLocs = getSpikeLocations(data,validMask,Fs,varargin)
                 minpeakdist = varargin{iarg + 1};
             case 'threshGain'
                 threshGain = varargin{iarg + 1};
-            case 'showMe'
-                showMe = varargin{iarg + 1};
+            case 'saveDir'
+                saveDir = varargin{iarg + 1};
+            case 'savePrefix'
+                savePrefix = varargin{iarg + 1};
         end
     end
 
@@ -71,67 +71,84 @@ function allLocs = getSpikeLocations(data,validMask,Fs,varargin)
     % set spike locations to 1
     detectVector(allLocs) = 1;
     % use peakseek to eliminate deadtime spikes: if we have spikes at 5-10-15
-    % and a deadtime of 7, it will remove the spike at 10 (it's smart!)
+    % and a deadtime of 7, it will remove the spike at 10
     allLocs = peakseek(detectVector,minpeakdist,0);
 
-    figure('position',[200 200 800 800]);
-    defaultColors = get(gca,'colororder');
-    legendText = {};
-    validWireCount = 1;
-    for ii=1:size(data,1)
-        if ~validMask(ii)
-            continue;
+    if exist('saveDir','var') && exist('savePrefix','var')
+        % we don't want to plot all data, in case it's long
+        dataWindow = 1e5;
+        dataSpan = min(size(data,2)/2,dataWindow);
+        dataMiddle = size(data,2)/2;
+        % modify data so it contains a decent amount of data, could be
+        % optimized to contain spikes, not sure it matters
+        t = [];
+        for ii=1:size(data,1)
+            t(ii,:) = data(ii,dataMiddle-dataSpan+1:dataMiddle+dataSpan);
         end
-        acceptedLocs = ismember(dataLocs{ii},allLocs);
-        rejectedLocs = ~acceptedLocs;
-        legendText{validWireCount} = ['wire',num2str(ii)];
+        data = t;
+        fig = figure('position',[200 200 800 800]);
+        defaultColors = get(gca,'colororder');
+        legendText = {};
+        validWireCount = 1;
+        for ii=1:size(data,1)
+            if ~validMask(ii)
+                continue;
+            end
+            acceptedLocs = ismember(dataLocs{ii},allLocs);
+            rejectedLocs = ~acceptedLocs;
+            legendText{validWireCount} = ['wire',num2str(ii)];
 
-        hs(1) = subplot(211);
-        title('Filtered Data');
-        xlabel('sample');
-        ylabel('uV')
-        hold on;
-        h(validWireCount) = plot(data(ii,:),'color',defaultColors(validWireCount,:));
-        plot(dataLocs{ii}(acceptedLocs),data(ii,dataLocs{ii}(acceptedLocs)),'o','color','k');
-        plot(dataLocs{ii}(rejectedLocs),data(ii,dataLocs{ii}(rejectedLocs)),'x','color','red');
+            hs(1) = subplot(211);
+            title('Filtered Data');
+            xlabel('sample');
+            ylabel('uV')
+            hold on;
+            h(validWireCount) = plot(data(ii,:),'color',defaultColors(validWireCount,:));
+            plot(dataLocs{ii}(acceptedLocs),data(ii,dataLocs{ii}(acceptedLocs)),'o','color','k');
+            plot(dataLocs{ii}(rejectedLocs),data(ii,dataLocs{ii}(rejectedLocs)),'x','color','red');
 
-        hs(2) = subplot(212);
-        title('SNLE');
-        xlabel('sample');
-        ylabel('SNLE')
-        hold on;
-        plot(y_snle(ii,:),'color',defaultColors(validWireCount,:));
-        plot([0 size(y_snle,2)],[minpeakh(ii) minpeakh(ii)],'--','color',defaultColors(validWireCount,:));
-        plot(dataLocs{ii}(acceptedLocs),y_snle(ii,dataLocs{ii}(acceptedLocs)),'o','color','k');
-        plot(dataLocs{ii}(rejectedLocs),y_snle(ii,dataLocs{ii}(rejectedLocs)),'x','color','red');
+            hs(2) = subplot(212);
+            title('SNLE');
+            xlabel('sample');
+            ylabel('SNLE')
+            hold on;
+            plot(y_snle(ii,:),'color',defaultColors(validWireCount,:));
+            plot([0 size(y_snle,2)],[minpeakh(ii) minpeakh(ii)],'--','color',defaultColors(validWireCount,:));
+            plot(dataLocs{ii}(acceptedLocs),y_snle(ii,dataLocs{ii}(acceptedLocs)),'o','color','k');
+            plot(dataLocs{ii}(rejectedLocs),y_snle(ii,dataLocs{ii}(rejectedLocs)),'x','color','red');
 
-        validWireCount = validWireCount + 1;
-    end
-    linkaxes(hs,'x');
-    subplot(211);
-    legend(h,legendText);
-    
-    figure('position',[300 300 300 800]);
-    validWireCount = 1;
-    preSpike = 16; %samples
-    postSpike = 32; %samples
-    for ii=1:size(data,1)
-        if ~validMask(ii)
-            continue;
+            validWireCount = validWireCount + 1;
         end
-        
-        subplot(length(find(validMask>0)),1,validWireCount);
-        title(['Wire ',num2str(ii)]);
-        xlabel('sample');
-        ylabel('uV')
-        hold on;
-        plotSpikes = min([length(allLocs) 400]);
-        randomLocs = datasample(allLocs,plotSpikes);
-        for jj=1:plotSpikes
-            plot(data(ii,randomLocs(jj)-preSpike:randomLocs(jj)+postSpike));
+        linkaxes(hs,'x');
+        subplot(211);
+        legend(h,legendText);
+        savefig(fig,fullfile(saveDir,[savePrefix,'_SNLE']),'compact');
+        close(fig);
+
+        fig = figure('position',[300 300 300 800]);
+        validWireCount = 1;
+        preSpike = 16; %samples
+        postSpike = 32; %samples
+        for ii=1:size(data,1)
+            if ~validMask(ii)
+                continue;
+            end
+
+            subplot(length(find(validMask>0)),1,validWireCount);
+            title(['Wire ',num2str(ii)]);
+            xlabel('sample');
+            ylabel('uV')
+            hold on;
+            plotSpikes = min([length(allLocs) 400]);
+            randomLocs = datasample(allLocs,plotSpikes);
+            for jj=1:plotSpikes
+                plot(data(ii,randomLocs(jj)-preSpike:randomLocs(jj)+postSpike));
+            end
+
+            validWireCount = validWireCount + 1;
         end
-        
-        validWireCount = validWireCount + 1;
+        savefig(fig,fullfile(saveDir,[savePrefix,'_waveforms']),'compact');
+        close(fig);
     end
 end
 
