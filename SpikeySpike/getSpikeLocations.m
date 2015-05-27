@@ -56,12 +56,12 @@ function allLocs = getSpikeLocations(data,validMask,Fs,varargin)
                 end
                 % reapply locations
                 dataLocs{ii} = dataLocs{ii}(locsGoing);
+                disp([num2str(length(dataLocs{ii})),' spikes found...']);
                 disp([num2str(round(length(dataLocs{ii})/length(locsGoing)*100)),'% spikes going ',onlyGoing,'...']);
             end
         else
             dataLocs{ii} = []; % no spikes for invalidated channels
         end
-        disp([num2str(length(dataLocs{ii})),' spikes found...']);
         allLocs = [allLocs dataLocs{ii}];
     end
     % put all locations in sequential order and eliminate doubles
@@ -76,16 +76,13 @@ function allLocs = getSpikeLocations(data,validMask,Fs,varargin)
 
     if exist('saveDir','var') && exist('savePrefix','var')
         % we don't want to plot all data, in case it's long
-        dataWindow = 1e5;
-        dataSpan = min(size(data,2)/2,dataWindow);
+        dataHalfWindow = min(size(data,2)/2,1e5);
         dataMiddle = size(data,2)/2;
-        % modify data so it contains a decent amount of data, could be
-        % optimized to contain spikes, not sure it matters
-        t = [];
-        for ii=1:size(data,1)
-            t(ii,:) = data(ii,dataMiddle-dataSpan+1:dataMiddle+dataSpan);
-        end
-        data = t;
+        dataRange = (dataMiddle - dataHalfWindow + 1):(dataMiddle + dataHalfWindow);
+        % extract all locations in data range and then zero the vector to
+        % the beginning of the data (the plot starts at zero)
+        locsInSpan = allLocs(allLocs >= min(dataRange) & allLocs < max(dataRange)) - min(dataRange);
+
         fig = figure('position',[200 200 800 800]);
         defaultColors = get(gca,'colororder');
         legendText = {};
@@ -94,28 +91,26 @@ function allLocs = getSpikeLocations(data,validMask,Fs,varargin)
             if ~validMask(ii)
                 continue;
             end
-            acceptedLocs = ismember(dataLocs{ii},allLocs);
-            rejectedLocs = ~acceptedLocs;
             legendText{validWireCount} = ['wire',num2str(ii)];
 
             hs(1) = subplot(211);
             title('Filtered Data');
             xlabel('sample');
             ylabel('uV')
-            hold on;
-            h(validWireCount) = plot(data(ii,:),'color',defaultColors(validWireCount,:));
-            plot(dataLocs{ii}(acceptedLocs),data(ii,dataLocs{ii}(acceptedLocs)),'o','color','k');
-            plot(dataLocs{ii}(rejectedLocs),data(ii,dataLocs{ii}(rejectedLocs)),'x','color','red');
+            hold on; grid on;
+            h(validWireCount) = plot(data(ii,dataRange),'color',defaultColors(validWireCount,:));
+            plot(locsInSpan,zeros(1,length(locsInSpan)),'o','color','k');
+%             plot(dataLocs{ii}(rejectedLocs),data(ii,dataLocs{ii}(rejectedLocs)),'x','color','red');
 
             hs(2) = subplot(212);
             title('SNLE');
             xlabel('sample');
             ylabel('SNLE')
-            hold on;
-            plot(y_snle(ii,:),'color',defaultColors(validWireCount,:));
-            plot([0 size(y_snle,2)],[minpeakh(ii) minpeakh(ii)],'--','color',defaultColors(validWireCount,:));
-            plot(dataLocs{ii}(acceptedLocs),y_snle(ii,dataLocs{ii}(acceptedLocs)),'o','color','k');
-            plot(dataLocs{ii}(rejectedLocs),y_snle(ii,dataLocs{ii}(rejectedLocs)),'x','color','red');
+            hold on; grid on;
+            plot(y_snle(ii,dataRange),'color',defaultColors(validWireCount,:));
+            plot([0 dataHalfWindow*2],[minpeakh(ii) minpeakh(ii)],'--','color',defaultColors(validWireCount,:));
+            plot(locsInSpan,zeros(1,length(locsInSpan)),'o','color','k');
+%             plot(dataLocs{ii}(rejectedLocs),y_snle(ii,dataLocs{ii}(rejectedLocs)),'x','color','red');
 
             validWireCount = validWireCount + 1;
         end
@@ -159,8 +154,12 @@ function dataLocs = findDataLocs(data,ysnleLocs)
         % extract a very small snippet of real data around SNLE peak
         snippet = data(ysnleLocs(ii)-halfWindow:ysnleLocs(ii)+halfWindow);
         % find peak in snippet of actual data
-        snippetLoc = peakseek(abs(snippet),halfWindow);
+        snippetLoc = peakseek(abs(snippet),halfWindow*2);
         % make adjustment
-        dataLocs(ii) = ysnleLocs(ii) + (snippetLoc - halfWindow) - 1;
+        if isempty(snippetLoc) %this happens when no peak is found
+            dataLocs(ii) = ysnleLocs(ii);
+        else
+            dataLocs(ii) = ysnleLocs(ii) + (snippetLoc - halfWindow) - 1;
+        end
     end
 end
