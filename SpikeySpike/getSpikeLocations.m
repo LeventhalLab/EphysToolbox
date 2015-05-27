@@ -99,8 +99,7 @@ function allLocs = getSpikeLocations(data,validMask,Fs,varargin)
             ylabel('uV')
             hold on; grid on;
             h(validWireCount) = plot(data(ii,dataRange),'color',defaultColors(validWireCount,:));
-            plot(locsInSpan,zeros(1,length(locsInSpan)),'o','color','k');
-%             plot(dataLocs{ii}(rejectedLocs),data(ii,dataLocs{ii}(rejectedLocs)),'x','color','red');
+            plot(locsInSpan,zeros(1,length(locsInSpan)),'x','color','k','MarkerSize',10);
 
             hs(2) = subplot(212);
             title('SNLE');
@@ -109,8 +108,7 @@ function allLocs = getSpikeLocations(data,validMask,Fs,varargin)
             hold on; grid on;
             plot(y_snle(ii,dataRange),'color',defaultColors(validWireCount,:));
             plot([0 dataHalfWindow*2],[minpeakh(ii) minpeakh(ii)],'--','color',defaultColors(validWireCount,:));
-            plot(locsInSpan,zeros(1,length(locsInSpan)),'o','color','k');
-%             plot(dataLocs{ii}(rejectedLocs),y_snle(ii,dataLocs{ii}(rejectedLocs)),'x','color','red');
+            plot(locsInSpan,zeros(1,length(locsInSpan)),'x','color','k','MarkerSize',10);
 
             validWireCount = validWireCount + 1;
         end
