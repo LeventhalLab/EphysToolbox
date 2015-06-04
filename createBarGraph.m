@@ -4,8 +4,8 @@ function createBarGraph(filename)
 tsCell = leventhalNexTs(filename);
 for ii = 1:size(tsCell,1)
     firingRate = [];
-    for t = 1:30:3600
-        numSpikes = length(find(tsCell{ii,2} < t+30));
+    for x = 1:30:3600
+        numSpikes = length(find(tsCell{ii,2} < x+30));
         firingRate = [firingRate numSpikes/30];
     end
     t = linspace(0,60,120);
