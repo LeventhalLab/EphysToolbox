@@ -3,14 +3,14 @@ function [burstEpochs,burstFreqs]=findBursts(ts)
 % [] allow for multiple classes of bursting?
 % 1) [nvar, names, types] = nex_info(filename)
 % 2) [n, ts] = nex_ts(filename, varname)
-histBin = 100;
+histBin = 1000;
 
 figure('position',[0 0 800 900]);
 subplot(511);
 [counts,centers] = hist(diff(ts),histBin);
 bar(centers,counts,'edgeColor','none');
 % xlim([0 max(centers)]);
-xlim([0 0.2]);
+xlim([0 0.5]);
 xlabel('ISI');
 ylabel('events');
 title('diff(ts)');
@@ -25,7 +25,7 @@ ylabel('events');
 title('log(diff(ts))');
 
 disp('Select burst peak-valley-peak...')
-[xBursts,~] = ginput
+[xBursts,~] = ginput(3)
 
 hold on;
 plot([xBursts(1) xBursts(1)],[0 max(logCounts)],'r','lineWidth',3);
@@ -50,7 +50,7 @@ for ii=1:length(bursts)
         end
     end
     if(ii>1000)
-        disp(ii)
+%         disp(ii)
     end
 end
 
@@ -78,6 +78,7 @@ bar(ts(burstEpochs(:,1)),burstFreqs);
 xlabel('time (s)');
 ylabel('frequency (Hz)');
 title('intra-burst firing frequency');
+ylim([0 500]);
 
 
 hs(3) = subplot(515);
