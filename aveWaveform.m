@@ -1,4 +1,4 @@
-function aveWaveform(ts, SEVfilename)
+function aveWaveform(ts, SEVfilename, varargin)
 %Function to plot the average waveform of a unit with the peak centered at
 %zero. Default color of summer tree green. Default window size of 4 ms.
 %
@@ -8,16 +8,28 @@ function aveWaveform(ts, SEVfilename)
 % 
 % possible variable inputs: color, window size
 
-summerTreeColor = [145/255, 205/255, 114/255];
+
+
+color = [145/255, 205/255, 114/255];
+windowSize = .002;
+
+for iarg = 1: 2 : nargin - 2
+    switch varargin{iarg}
+        case 'color'
+            color = varargin{iarg + 1};
+        case 'windowSize'
+            windowSize = varargin{iarg + 1};
+    end
+end
 
 %Read in data and filter
 [sev, header] = read_tdt_sev(SEVfilename);
+windowSize = round(windowSize* header.Fs);
 [b,a] = butter(4, [.02, .2]);
 for ii = 1:size(sev,1)
     sev(ii,:) = filtfilt(b,a,double(sev(ii,:)));
 end
 
-windowSize = round(.002*header.Fs);
 waveforms = [];
 
 %Create the segments of the wave form that are 2ms on either side of the
@@ -36,11 +48,11 @@ lowerStd = meanWave - stdDev;
 
 %Plot the waveform and shade upper and lower standard deviations
 figure
-t = linspace(-2, 2, length(meanWave));
-fill([t fliplr(t)], [upperStd fliplr(lowerStd)], summerTreeColor, 'edgeColor', summerTreeColor);
+t = linspace(-windowSize/2, windowSize/2, length(meanWave));
+fill([t fliplr(t)], [upperStd fliplr(lowerStd)], color, 'edgeColor', color);
 alpha(.25);
 hold on
-plot(t, meanWave, 'color', summerTreeColor, 'lineWidth', 2)
+plot(t, meanWave, 'color', color, 'lineWidth', 2)
 hold on
 % plot(t, upperStd, 'k');
 % plot(t, lowerStd, 'k');
