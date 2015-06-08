@@ -8,16 +8,20 @@ function waveforms = aveWaveform(ts, SEVfilename, varargin)
 % 
 % possible variable inputs: color (in [R/255, B/255, G/255] format), window
 % size (in milliseconds)
+%
+% Outputs:
+%   waveforms - vector to plot the waveform later
 
 
 
-color = [145/255, 205/255, 114/255];
+
+% color = [145/255, 205/255, 114/255];
 windowSize = .002;
 
 for iarg = 1: 2 : nargin - 2
     switch varargin{iarg}
-        case 'color'
-            color = varargin{iarg + 1};
+%         case 'color'
+%             color = varargin{iarg + 1};
         case 'windowSize'
             windowSize = varargin{iarg + 1};
     end
