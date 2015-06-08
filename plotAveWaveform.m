@@ -1,4 +1,4 @@
-function plotAveWaveform(waveforms, windowSize, varargin)
+function plotAveWaveform(meanWaveforms, upperStd, lowerStd, windowSize, varargin)
 % Function to plot the average waveform of a unit
 %
 % Inputs:
@@ -8,28 +8,28 @@ function plotAveWaveform(waveforms, windowSize, varargin)
 
 color = [145/255, 205/255, 114/255];
 
-for iarg = 1: 2 : nargin - 2
+for iarg = 1: 2 : nargin - 4
     switch varargin{iarg}
         case 'color'
             color = varargin{iarg + 1};
     end
 end
 
-%Calculate the mean for each column in the waveform vector
-meanWave = mean(waveforms,1);
-
-%Calculate the standard deviations
-stdDev = std(waveforms);
-upperStd = meanWave + stdDev;
-lowerStd = meanWave - stdDev;
+% %Calculate the mean for each column in the waveform vector
+% meanWave = mean(waveforms,1);
+% 
+% %Calculate the standard deviations
+% stdDev = std(waveforms);
+% upperStd = meanWave + stdDev;
+% lowerStd = meanWave - stdDev;
 
 %Plot the waveform and shade upper and lower standard deviations
 figure
-t = linspace(-windowSize, windowSize, length(meanWave));
+t = linspace(-windowSize, windowSize, length(meanWaveforms));
 fill([t fliplr(t)], [upperStd fliplr(lowerStd)], color, 'edgeColor', color);
 alpha(.25);
 hold on
-plot(t, meanWave, 'color', color, 'lineWidth', 2)
+plot(t, meanWaveforms, 'color', color, 'lineWidth', 2)
 hold on
 % plot(t, upperStd, 'k');
 % plot(t, lowerStd, 'k');

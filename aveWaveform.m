@@ -1,4 +1,4 @@
-function waveforms = aveWaveform(ts, SEVfilename, varargin)
+function [meanWaveforms, upperStd, lowerStd] = aveWaveform(ts, SEVfilename, varargin)
 %Function to plot the average waveform of a unit with the peak centered at
 %zero. Default color of summer tree green. Default window size of 4 ms.
 %
@@ -10,7 +10,9 @@ function waveforms = aveWaveform(ts, SEVfilename, varargin)
 % size (in milliseconds)
 %
 % Outputs:
-%   waveforms - vector to plot the waveform later
+%   meanWaveforms - vector to plot the waveform later
+%   upperStd - the waveform one standard deviation above the mean
+%   lowerStd - the waveform one standard deviation below the mean
 
 
 
@@ -43,14 +45,14 @@ for ii = 1:length(ts)
     waveforms = [waveforms; sev(round(header.Fs*ts(ii))-window:round(header.Fs*ts(ii))+window)];     
 end    
 
-% %Calculate the mean for each column in the waveform vector
-% meanWave = mean(waveforms,1);
-% 
-% %Calculate the standard deviations
-% stdDev = std(waveforms);
-% upperStd = meanWave + stdDev;
-% lowerStd = meanWave - stdDev;
-% 
+%Calculate the mean for each column in the waveform vector
+meanWaveforms = mean(waveforms,1);
+
+%Calculate the standard deviations
+stdDev = std(waveforms);
+upperStd = meanWaveforms + stdDev;
+lowerStd = meanWaveforms - stdDev;
+
 % %Plot the waveform and shade upper and lower standard deviations
 % figure
 % t = linspace(-windowSize, windowSize, length(meanWave));
