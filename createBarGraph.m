@@ -7,7 +7,8 @@ function createBarGraph(filename, varargin)
 % possible variable inputs: length of session (in minutes), bin size (in
 % seconds)
 
-%Get the timestamps for each channel
+binSize = 30;
+time = 60;
 for iarg = 1 : 2 : nargin - 1
     switch varargin{iarg}
         case 'time'
@@ -16,7 +17,8 @@ for iarg = 1 : 2 : nargin - 1
             binSize = varargin{iarg + 1};
     end
 end
-        
+
+%Get the timestamps for each channel
 tsCell = leventhalNexTs(filename);
 for ii = 1:size(tsCell,1)
     firingRate = [];

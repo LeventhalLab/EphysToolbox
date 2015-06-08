@@ -24,7 +24,7 @@ end
 
 %Read in data and filter
 [sev, header] = read_tdt_sev(SEVfilename);
-window = round((windowSize/1000)* header.Fs);
+windowSize = round(windowSize* header.Fs);
 [b,a] = butter(4, [.02, .2]);
 for ii = 1:size(sev,1)
     sev(ii,:) = filtfilt(b,a,double(sev(ii,:)));
@@ -35,7 +35,7 @@ waveforms = [];
 %Create the segments of the wave form that are 2ms on either side of the
 %peak
 for ii = 1:length(ts)
-    waveforms = [waveforms; sev(round(header.Fs*ts(ii))-window:round(header.Fs*ts(ii))+window)];     
+    waveforms = [waveforms; sev(round(header.Fs*ts(ii))-windowSize:round(header.Fs*ts(ii))+windowSize)];     
 end    
 
 %Calculate the mean for each column in the waveform vector
@@ -48,7 +48,7 @@ lowerStd = meanWave - stdDev;
 
 %Plot the waveform and shade upper and lower standard deviations
 figure
-t = linspace(-windowSize, windowSize, length(meanWave));
+t = linspace(-windowSize/2, windowSize/2, length(meanWave));
 fill([t fliplr(t)], [upperStd fliplr(lowerStd)], color, 'edgeColor', color);
 alpha(.25);
 hold on
