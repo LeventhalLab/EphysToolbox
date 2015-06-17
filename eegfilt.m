@@ -94,7 +94,8 @@ if nargin<7
     revfilt = 0;
 end
 if nargin<8
-    firtype = 'firls';
+    firtype = 'fir1'; % fir1 by default
+%     firtype = 'firls';
 end
 if nargin<9
     causal = 0;
