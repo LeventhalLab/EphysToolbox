@@ -124,6 +124,7 @@ MarkerFormat.LineStyle = 'none';
 p = inputParser;
 p.addRequired('spikes',@(x) islogical(x) || iscell(x));
 p.addParamValue('FigHandle',gcf,@isinteger);
+p.addParamValue('FigureVisible','on',@ischar);
 p.addParamValue('PlotType','horzLine',@ischar);
 p.addParamValue('LineFormat',LineFormat,@isstruct)
 p.addParamValue('MarkerFormat',MarkerFormat,@isstruct);
@@ -161,6 +162,7 @@ end
 
 %% Initialize figure and begin plotting logic
 figure(figH);
+set(figH,'visible',p.Results.FigureVisible);
 hold on;
 
 if islogical(spikes)
