@@ -126,8 +126,8 @@ linenames = {'cue1On','cue1Off', 'cue2On','cue2Off','cue3On','cue3Off','cue4On',
 
 % Set up the NEX file data structure
 nexData.version = 1;
-nexData.comment = 'Converted TDTtoNex. Alex Zotov, Matt Gaidica 2015';
-nexData.freq = 24440; % THIS NEEDS TO BE CHANGED TO THE ACTUAL SAMPLING RATE!
+nexData.comment = 'Converted TDTtoNex. Alex Zotov, Matt Gaidica.';
+nexData.freq = sessionConf.Fs;
 nexData.tbeg = 0;
 nexData.events = {};
 nexData.tbeg = nexData.data.timestamp(2);
