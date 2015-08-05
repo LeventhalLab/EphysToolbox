@@ -76,8 +76,8 @@ function allLocs = getSpikeLocations(data,validMask,Fs,varargin)
 
     if exist('saveDir','var') && exist('savePrefix','var')
         % we don't want to plot all data, in case it's long
-        dataHalfWindow = min(size(data,2)/2,1e5);
-        dataMiddle = size(data,2)/2;
+        dataHalfWindow = round(min(size(data,2)/2,1e5));
+        dataMiddle = round(size(data,2)/2);
         dataRange = (dataMiddle - dataHalfWindow + 1):(dataMiddle + dataHalfWindow);
         % extract all locations in data range and then zero the vector to
         % the beginning of the data (the plot starts at zero)

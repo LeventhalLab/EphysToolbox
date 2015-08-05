@@ -66,6 +66,7 @@ for iDir = 1 : numDirs
     plxName = dir('*.plx');
     if isempty(plxName); continue; end
     [~, ~, Fs, ~, ~, ~, ~, ~, ~, ~, ~, ~, ~] = plx_information(plxName(1).name);
+    Fs = 24414
     
     nexStruct = combineNex_wf(nexNames, Fs, subdirs{iDir});
     
@@ -84,4 +85,5 @@ for iDir = 1 : numDirs
     else
         disp(['error saving ' combinedNexName]);
     end
+    
 end

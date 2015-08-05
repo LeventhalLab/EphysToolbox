@@ -1,4 +1,4 @@
-function waveforms = extractWaveforms( data, ts, peakLoc, waveLength )
+ function waveforms = extractWaveforms( data, ts, peakLoc, waveLength )
 %
 % usage: waveforms = extractWaveforms( data, ts, peakLoc, waveLength )
 %
