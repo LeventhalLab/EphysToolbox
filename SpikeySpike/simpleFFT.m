@@ -10,6 +10,6 @@ A = 2*abs(Y(1:NFFT/2+1));
 
 figure;
 plot(f,A);
-xlim([10 2000]);
+xlim([5 500]);
 xlabel('Frequency (Hz)')
 ylabel('|Y(f)|')
