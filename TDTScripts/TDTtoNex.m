@@ -22,26 +22,33 @@ function nexData = TDTtoNex(sessionConf)
 % OUTPUTS:
 %   none
 
+% allow empty input to manually select files
+if ~isempty(sessionConf)
+    leventhalPaths = buildLeventhalPaths(sessionConf,{'processed'});
 
-leventhalPaths = buildLeventhalPaths(sessionConf,{'processed'});
-
-tevInfo = dir(fullfile(leventhalPaths.rawdata,'*.tev'));
-if isempty(tevInfo)
-    error('TDTtoNex_20141204:noTevFile', ['no tev file found for session ' sessionConf.sessionName]);
+    tevInfo = dir(fullfile(leventhalPaths.rawdata,'*.tev'));
+    if isempty(tevInfo)
+        error('TDTtoNex_20141204:noTevFile', ['no tev file found for session ' sessionConf.sessionName]);
+    end
+    if length(tevInfo) > 1
+        error('TDTtoNex_20141204:multipleTevFiles', ['more than one tev file found for session ' sessionConf.sessionName]);
+    end
+    tsqInfo = dir(fullfile(leventhalPaths.rawdata,'*.tsq'));
+    if isempty(tsqInfo)
+        error('TDTtoNex_20141204:noTsqFile', ['no tsq file found for session ' sessionConf.sessionName]);
+    end
+    if length(tsqInfo) > 1
+        error('TDTtoNex_20141204:multipleTsqFiles', ['more than one tsq file found for session ' sessionConf.sessionName]);
+    end
+    tevName = fullfile(leventhalPaths.rawdata, tevInfo.name);
+    tsqName = fullfile(leventhalPaths.rawdata, tsqInfo.name);
+else
+    tdtDir = uigetdir;
+    tevInfo = dir(fullfile(tdtDir,'*.tev'));
+    tsqInfo = dir(fullfile(tdtDir,'*.tsq'));
+    tevName = fullfile(tdtDir,tevInfo.name);
+    tsqName = fullfile(tdtDir,tsqInfo.name);
 end
-if length(tevInfo) > 1
-    error('TDTtoNex_20141204:multipleTevFiles', ['more than one tev file found for session ' sessionConf.sessionName]);
-end
-tsqInfo = dir(fullfile(leventhalPaths.rawdata,'*.tsq'));
-if isempty(tsqInfo)
-    error('TDTtoNex_20141204:noTsqFile', ['no tsq file found for session ' sessionConf.sessionName]);
-end
-if length(tsqInfo) > 1
-    error('TDTtoNex_20141204:multipleTsqFiles', ['more than one tsq file found for session ' sessionConf.sessionName]);
-end
-tevName = fullfile(leventhalPaths.rawdata, tevInfo.name);
-tsqName = fullfile(leventhalPaths.rawdata, tsqInfo.name);
-
 store_id2 = 'Vide';
 store_id = 'Wave';  % this is just an example
 tev = fopen(tevName);
@@ -116,8 +123,7 @@ for n=1:length(fp_loc2)
 end
 % For your specialized task,
 % replace these with your line names, 
-% and save a new box2nex.m file, and call it something specific, e.g.
-% box2nex_foodwatertask.m
+% tone1=low, tone2=high
 linenames = {'cue1On','cue1Off', 'cue2On','cue2Off','cue3On','cue3Off','cue4On','cue4Off','cue5On','cue5Off','houselightOn','houselightOff', ...
          'foodOn','foodOff', 'line08On','line08Off', 'nose1In', 'nose1Out', 'nose2In', 'nose2Out', ...
          'nose3In', 'nose3Out', 'nose4In', 'nose4Out','nose5In', 'nose5Out', 'foodportOn', 'foodportOff','line15On','line15Off', ...
@@ -127,7 +133,9 @@ linenames = {'cue1On','cue1Off', 'cue2On','cue2Off','cue3On','cue3Off','cue4On',
 % Set up the NEX file data structure
 nexData.version = 1;
 nexData.comment = 'Converted TDTtoNex. Alex Zotov, Matt Gaidica.';
-nexData.freq = sessionConf.Fs;
+if ~isempty(sessionConf)
+    nexData.freq = sessionConf.Fs;
+end
 nexData.tbeg = 0;
 nexData.events = {};
 nexData.tbeg = nexData.data.timestamp(2);
@@ -231,8 +239,12 @@ nexData.events{48}.timestamps = nexData2.events{52}.timestamps;
 
 nexData.events = nexData.events';
 nexData.tend = nexData.raw.chan_info(end,1);
-filePath = fullfile(leventhalPaths.processed,[sessionConf.sessionName '.box.nex']);
-save([filePath,'.mat'],'nexData','-v7.3');
-writeNexFile(nexData, filePath);
+
+% only save if sessionConf is passed in
+if ~isempty(sessionConf)
+    filePath = fullfile(leventhalPaths.processed,[sessionConf.sessionName '.box.nex']);
+    save([filePath,'.mat'],'nexData','-v7.3');
+    writeNexFile(nexData, filePath);
+end
 fclose(tev);
 fclose(tsq);

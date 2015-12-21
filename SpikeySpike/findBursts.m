@@ -5,7 +5,7 @@ function [burstEpochs,burstFreqs]=findBursts(ts)
 % 2) [n, ts] = nex_ts(filename, varname)
 histBin = 1000;
 
-figure('position',[0 0 800 900]);
+h = figure('position',[0 0 800 900]);
 subplot(511);
 [counts,centers] = hist(diff(ts),histBin);
 bar(centers,counts,'edgeColor','none');
@@ -25,6 +25,7 @@ ylabel('events');
 title('log(diff(ts))');
 
 disp('Select burst peak-valley-peak...')
+figure(h)
 [xBursts,~] = ginput(3)
 
 hold on;

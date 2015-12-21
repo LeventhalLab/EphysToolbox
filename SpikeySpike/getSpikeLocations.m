@@ -83,6 +83,7 @@
         % we don't want to plot all data, in case it's long
         dataHalfWindow = round(min(size(data,2)/2,1e5));
         dataMiddle = round(size(data,2)/2);
+
         dataRange = (dataMiddle - dataHalfWindow + 1):(dataMiddle + dataHalfWindow);
         % extract all locations in data range and then zero the vector to
         % the beginning of the data (the plot starts at zero)
