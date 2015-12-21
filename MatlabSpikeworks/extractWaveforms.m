@@ -5,7 +5,7 @@
 % INPUTS:
 %   data - m x n matrix containing wavelet filtered data; m is the number
 %       of wires, n is the number of samples
-%   ts - timestamps of the waveform peaks
+%   ts - timestamps of the waveform peaks in SAMPLES
 %   peakLoc - desired location of the peak within the waveform (ie, 
 %       peakLoc = 8 means that the peak will be placed at the 8th sample -
 %       that is, start the waveform at ts - peakLoc + 1
@@ -19,6 +19,9 @@
 
 numWires   = size(data, 1);
 numSamples = size(data, 2);
+
+%sinc interpolate
+
 
 ts = ts(ts > peakLoc + 1);
 ts = ts(ts < (numSamples + peakLoc - waveLength));
