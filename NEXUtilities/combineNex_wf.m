@@ -69,10 +69,17 @@ numIntervals = 0;
 numContVars = 0;
 numMarkers = 0;
 for iNex = 1 : length(nexfn)
-    [nvar, names, types] = nex_info(nexfn{iNex});
+    curFilename = nexfn{iNex};
+    [nvar, names, types] = nex_info(curFilename);
     
     for iVar = 1 : nvar
         curName = deblank(names(iVar,:));
+        % new as of 2016, for DDT sorting, might break for < R0088
+        neuronLetter = curName(end);
+        [tetrodeName,tetrodeId] = getTetrodeInfo(curFilename);
+%         [a,b] = regexp(curFilename,'_T[0-9]+_');
+%         tetrodeId = curFilename(a+1:b-1);
+        
         type = types(iVar);
         
         switch type
@@ -89,7 +96,7 @@ for iNex = 1 : length(nexfn)
 %                 newUnitName = [sessionName '_' unitID];
                 
                 %temp fix, added iNex so this works with single channel sorting
-                newUnitName = [sessionName,'_',curName,'_',num2str(iNex)]; 
+                newUnitName = [sessionName,'_',tetrodeName,'_',neuronLetter]; 
                 
                 if ~isempty(nexData.neurons)
                     exitFlag = 0;
@@ -308,3 +315,5 @@ for iNex = 1 : length(nexfn)
 end    % end for iNex...
 
 varargout(1) = {nexData};
+
+

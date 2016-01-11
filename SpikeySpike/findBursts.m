@@ -3,7 +3,7 @@ function [burstEpochs,burstFreqs]=findBursts(ts)
 % [] allow for multiple classes of bursting?
 % 1) [nvar, names, types] = nex_info(filename)
 % 2) [n, ts] = nex_ts(filename, varname)
-histBin = 1000;
+histBin = 200;
 
 h = figure('position',[0 0 800 900]);
 subplot(511);
