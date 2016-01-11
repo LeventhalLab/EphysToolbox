@@ -1,4 +1,4 @@
-function [burstEpochs,burstFreqs]=findBursts(ts)
+function [burstEpochs,burstFreqs]=findBursts(ts,xBursts)
 % [] intraburst frequency
 % [] allow for multiple classes of bursting?
 % 1) [nvar, names, types] = nex_info(filename)
@@ -24,9 +24,12 @@ xlabel('log(ISI)');
 ylabel('events');
 title('log(diff(ts))');
 
-disp('Select burst peak-valley-peak...')
-figure(h)
-[xBursts,~] = ginput(3)
+% allow user to override manual input
+if ~exist('xBursts','var')
+    disp('Select burst peak-valley-peak...')
+    figure(h)
+    [xBursts,~] = ginput(3)
+end
 
 hold on;
 plot([xBursts(1) xBursts(1)],[0 max(logCounts)],'r','lineWidth',3);
