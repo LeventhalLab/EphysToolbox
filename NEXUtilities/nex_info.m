@@ -1,4 +1,4 @@
-function [nvar, names, types] = nex_info(filename)
+function [nvar, names, types, freq] = nex_info(filename)
 % nex_info(filename) -- read and display .nex file info
 %
 % [nvar, names, types] = nex_info(filename)

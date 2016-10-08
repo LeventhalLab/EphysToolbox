@@ -62,10 +62,9 @@ for iDir = 1 : numDirs
         nexNames{iNex} = nexList(iNex).name;
     end
     
-    % using the PLX file for Fs !!!
-    plxName = dir('*.plx');
-    if isempty(plxName); continue; end
-    [~, ~, Fs, ~, ~, ~, ~, ~, ~, ~, ~, ~, ~] = plx_information(plxName(1).name);
+    % grab Fs from a nex file
+    [~, ~, ~, Fs] = nex_info(nexNames{iNex});
+    disp(['Combining with ADFreq: ',num2str(Fs)]);
     
     nexStruct = combineNex_wf(nexNames, Fs, subdirs{iDir});
     
