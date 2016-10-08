@@ -74,12 +74,6 @@ for iNex = 1 : length(nexfn)
     
     for iVar = 1 : nvar
         curName = deblank(names(iVar,:));
-        % new as of 2016, for DDT sorting, might break for < R0088
-        neuronLetter = curName(end);
-        [tetrodeName,tetrodeId] = getTetrodeInfo(curFilename);
-%         [a,b] = regexp(curFilename,'_T[0-9]+_');
-%         tetrodeId = curFilename(a+1:b-1);
-        
         type = types(iVar);
         
         switch type
@@ -89,14 +83,9 @@ for iNex = 1 : length(nexfn)
                 % create a new neuron name based on the session name,
                 % site/tetrode identifier, and unit identifier (ie, a, b,
                 % c, etc.)
-                
-                % this was not working, curName=T02_W01a, so...?
-%                 numCharsBeforeSite = length(sessionName) - 2;
-%                 unitID = curName(numCharsBeforeSite+1:end);
-%                 newUnitName = [sessionName '_' unitID];
-                
-                %temp fix, added iNex so this works with single channel sorting
-                newUnitName = [sessionName,'_',tetrodeName,'_',neuronLetter]; 
+                neuronLetter = curName(end);
+                [~,name,~] = fileparts(curFilename);
+                newUnitName = [name neuronLetter];
                 
                 if ~isempty(nexData.neurons)
                     exitFlag = 0;
