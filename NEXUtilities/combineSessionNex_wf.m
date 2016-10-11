@@ -1,4 +1,4 @@
-function combineSessionNex_wf( varargin )
+function nexStruct = combineSessionNex_wf( varargin )
 %
 % usage: combineSessionNex( varargin )
 %
@@ -49,11 +49,8 @@ end
 numDirs = length(subdirs);
 
 for iDir = 1 : numDirs
-    
     cd(fullfile(parentDir, subdirs{iDir}));
-    
     nexList = dir('*.nex');
-    
     numNex = length(nexList);
     if numNex <= 1; continue; end
     

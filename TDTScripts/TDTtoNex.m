@@ -24,7 +24,7 @@ function nexData = TDTtoNex(sessionConf)
 
 % allow empty input to manually select files
 if ~isempty(sessionConf)
-    leventhalPaths = buildLeventhalPaths(sessionConf,{'processed'});
+    leventhalPaths = buildLeventhalPaths(sessionConf);
 
     tevInfo = dir(fullfile(leventhalPaths.rawdata,'*.tev'));
     if isempty(tevInfo)
