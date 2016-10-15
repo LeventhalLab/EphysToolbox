@@ -140,11 +140,11 @@ if locutoff > 0 & hicutoff > 0,    % bandpass filter
     if revfilt
         fprintf('eegfilt() - performing %d-point notch filtering.\n',filtorder);
     else
-        fprintf('eegfilt() - performing %d-point bandpass filtering.\n',filtorder);
+%         fprintf('eegfilt() - performing %d-point bandpass filtering.\n',filtorder);
     end;
-    fprintf('            If a message, ''Matrix is close to singular or badly scaled,'' appears,\n');
-    fprintf('            then Matlab has failed to design a good filter. As a workaround, \n');
-    fprintf('            for band-pass filtering, first highpass the data, then lowpass it.\n');
+%     fprintf('            If a message, ''Matrix is close to singular or badly scaled,'' appears,\n');
+%     fprintf('            then Matlab has failed to design a good filter. As a workaround, \n');
+%     fprintf('            for band-pass filtering, first highpass the data, then lowpass it.\n');
     if strcmp(firtype, 'firls')
         f=[MINFREQ (1-trans)*locutoff/nyq locutoff/nyq hicutoff/nyq (1+trans)*hicutoff/nyq 1];
         fprintf('eegfilt() - low transition band width is %1.1g Hz; high trans. band width, %1.1g Hz.\n',(f(3)-f(2))*srate/2, (f(5)-f(4))*srate/2);
@@ -206,10 +206,10 @@ for e = 1:epochs                % filter each epoch, channel
             end;
         end;
         if epochs == 1
-            if rem(c,20) ~= 0, fprintf('.');
-            else               fprintf('%d',c);
-            end
+%             if rem(c,20) ~= 0, fprintf('.');
+%             else               fprintf('%d',c);
+%             end
         end
     end
 end
-fprintf('\n');
+% fprintf('\n');
