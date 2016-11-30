@@ -15,7 +15,7 @@ function data = artifactThresh(data,validMask,thresh)
     locs = sort(locs);
 
     % waveform has to come back to baseline
-    baseline = 50;
+    baseline = 50; % good for uV, might be different for EEG
     for ii=1:size(data,1)
         if ~validMask(ii)
             continue;
@@ -63,5 +63,7 @@ function data = artifactThresh(data,validMask,thresh)
             end
         end
     end
-    disp([num2str(length(locs)),' artifacts cured...']);
+    if length(locs) > 0
+        disp([num2str(length(locs)),' artifacts cured']);
+    end
 end
