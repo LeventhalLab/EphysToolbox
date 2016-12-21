@@ -1,19 +1,19 @@
-% find testDirs in testPaths
+% [ ] does source file exist?
+% [ ] easy way to copy files from one source to another?
+% [ ] notify user of end
 
-% import these
-% these are the "drives"
-testPaths = {'/Users/mattgaidica/Documents/Data/ChoiceTask/R0117','/Users/mattgaidica/Documents/Data/ChoiceTask/R0088'};
-% these are animal-specific data folders to look for across drives
-testDirs = {'R0117-processed','R0088-processed'};
-
+sourceFile = 'backrupr_sources.txt';
+testFile = 'backrupr_tests.txt';
+sources = importdata(sourceFile);
+tests = importdata(testFile);
 % find all matches for testDir
-for itestDirs = 1:length(testDirs)
+for itestDirs = 1:length(tests)
     % find all testDirs
-    testDir = testDirs{itestDirs};
+    testDir = tests{itestDirs};
     matches = {};
     matchCount = 1;
-    for itestPaths = 1:length(testPaths)
-        testPath = testPaths{itestPaths};
+    for itestPaths = 1:length(sources)
+        testPath = sources{itestPaths};
         l2 = dir2(testPath,'-r');
         l2 = l2([l2(:).isdir]); % no files
         % find all matching
@@ -42,5 +42,5 @@ for itestDirs = 1:length(testDirs)
     end
     
     T = cell2table(reportTable);
-    
+    writetable(T,['REPORT_',testDir]);
 end

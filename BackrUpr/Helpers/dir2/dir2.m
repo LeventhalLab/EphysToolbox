@@ -84,9 +84,9 @@ if ii > 1
 end
 
 % Remove the self and parent directory listings in recursive calls
-if isRec
-    dout(ismember({dout.name},{'.','..'})) = [];
-end
+% % if isRec
+    dout(ismember({dout.name},{'.','..','.DS_Store','._.DS_Store'})) = [];
+% % end
 
 
 % If recursive...
