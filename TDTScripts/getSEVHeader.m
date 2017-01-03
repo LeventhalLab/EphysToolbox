@@ -85,6 +85,10 @@ fid = fopen(filename, 'rb');
         exists = 1;
         data.(streamHeader.eventName).fs = streamHeader.Fs;
     end
-    streamHeader.dataStartByte = ftell(fid);        % added by DKL 12/08/2014
+    streamHeader.dataStartByte = ftell(fid);
+    streamHeader.dataBytes = streamHeader.fileSizeBytes - streamHeader.dataStartByte;
+    % get 20 samples equally spaces, this takes very little time
+    streamHeader.dataSnippet = fread(fid, inf, ['*' streamHeader.dForm], round(streamHeader.dataBytes/20))';
+    
     header = streamHeader;
     fclose(fid);
