@@ -1,4 +1,5 @@
-function [errCode] = ddt_write_v(filename, nch, npoints, freq, d)
+%.m to .ddt
+function [errCode] = ddt_write_v2(filename, nch, npoints, freq, d)
 % ddt_write_v(filename, nch, npoints, freq, d) Write data to a .ddt file
 %
 % [errCode] = ddt_write_v(filename, nch, npoints, freq, d)
