@@ -10,5 +10,5 @@ for channel = 1:length(amplifier_channels)
 end
 
 %write individual channels to .ddt (replace X with channel number)
-%ddt_write_v('channel_X.ddt',1,length(f_amplifier_data(X,:)),frequency_parameters.amplifier_sample_rate,f_amplifier_data(X,:)/1000)
+%ddt_write_v2('channel_X.ddt',1,length(f_amplifier_data(X,:)),frequency_parameters.amplifier_sample_rate,f_amplifier_data(X,:)/1000)
 
