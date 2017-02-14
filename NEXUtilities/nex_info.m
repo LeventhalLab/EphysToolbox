@@ -32,7 +32,7 @@ if(fid == -1)
    return
 end
 
-disp(strcat('file = ', filename));
+% % disp(strcat('file = ', filename));
 magic = fread(fid, 1, 'int32');
 version = fread(fid, 1, 'int32');
 comment = fread(fid, 256, 'char');
@@ -41,10 +41,10 @@ tbeg = fread(fid, 1, 'int32');
 tend = fread(fid, 1, 'int32');
 nvar = fread(fid, 1, 'int32');
 fseek(fid, 260, 'cof');
-disp(strcat('version = ', num2str(version)));
-disp(strcat('frequency = ', num2str(freq)));
-disp(strcat('duration (sec) = ', num2str((tend - tbeg)/freq)));
-disp(strcat('number of variables = ', num2str(nvar)));
+% % disp(strcat('version = ', num2str(version)));
+% % disp(strcat('frequency = ', num2str(freq)));
+% % disp(strcat('duration (sec) = ', num2str((tend - tbeg)/freq)));
+% % disp(strcat('number of variables = ', num2str(nvar)));
 names = zeros(1, 64);
 for i=1:nvar
 	types(i) = fread(fid, 1, 'int32');
