@@ -1,4 +1,4 @@
-function [f,A] = simpleFFT(data,Fs,newFig)
+function [A,f] = simpleFFT(data,Fs,newFig)
     if size(data,1) > 1
         allA = [];
         for ii=1:size(data)
@@ -12,8 +12,8 @@ function [f,A] = simpleFFT(data,Fs,newFig)
 
     if newFig
         figure;
-        semilogy(f,A);
-        xlim([0 20]);
+        semilogy(f,smooth(A,300));
+        xlim([5 100]);
         xlabel('Frequency (Hz)')
         ylabel('|Y(f)|')
     end

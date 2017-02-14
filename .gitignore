@@ -1,2 +1,9 @@
 *.m~
 *.DS_Store
+*.pdf
+*.fig
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.JPG
