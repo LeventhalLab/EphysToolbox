@@ -44,29 +44,28 @@ function dout = dir2(dn,varargin)
 % By: J Sullivan
 % January 2013
 
-if ispc
-    
-    if isempty(which('dir2_mex'))
-        install_dir2_mex;
-    end
-    
-    if ~isempty(which('dir2_mex'))
-        
-        if nargin > 0
-            dout = dir2_mex(dn,varargin{:});
-        else
-            dout = dir2_mex;
-        end
-        
-        % Only print the results if nargout == 0
-        if nargout == 0
-            printAsTable({dout(:).name});
-            clear dout
-        end
-        
-        return;
-    end
-end
+% % if ispc
+% %     if isempty(which('dir2_mex'))
+% %         install_dir2_mex;
+% %     end
+% %     
+% %     if ~isempty(which('dir2_mex'))
+% %         
+% %         if nargin > 0
+% %             dout = dir2_mex(dn,varargin{:});
+% %         else
+% %             dout = dir2_mex;
+% %         end
+% %         
+% %         % Only print the results if nargout == 0
+% %         if nargout == 0
+% %             printAsTable({dout(:).name});
+% %             clear dout
+% %         end
+% %         
+% %         return;
+% %     end
+% % end
 % Parse the inputs
 if nargin == 0; dn = pwd; end
 [dn, recursive, filter] = parseInputs(dn,varargin{:});
