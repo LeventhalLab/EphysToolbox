@@ -24,7 +24,7 @@ function nexData = TDTtoNex(sessionConf)
 
 % allow empty input to manually select files
 if ~isempty(sessionConf)
-    leventhalPaths = buildLeventhalPaths(sessionConf);
+    leventhalPaths = buildLeventhalPathsv2(sessionConf);
 
     tevInfo = dir(fullfile(leventhalPaths.rawdata,'*.tev'));
     if isempty(tevInfo)
@@ -242,7 +242,7 @@ nexData.tend = nexData.raw.chan_info(end,1);
 
 % only save if sessionConf is passed in
 if ~isempty(sessionConf)
-    filePath = fullfile(leventhalPaths.processed,[sessionConf.sessionName '.box.nex']);
+    filePath = fullfile(leventhalPaths.processed,[sessionConf.sessions__name '.box.nex']);
     save([filePath,'.mat'],'nexData','-v7.3');
     writeNexFile(nexData, filePath);
 end
