@@ -1,4 +1,4 @@
-function read_Intan_RHD2000_file
+function read_Intan_RHD2000_file(varargin)
 
 % read_Intan_RHD2000_file
 %
@@ -17,20 +17,25 @@ function read_Intan_RHD2000_file
 % >> amplifier_channels(1)
 % >> plot(t_amplifier, amplifier_data(1,:))
 
-[file, path, filterindex] = ...
-    uigetfile('*.rhd', 'Select an RHD2000 Data File', 'MultiSelect', 'off');
-
-if (file == 0)
-    return;
-end
-
-% Read most recent file automatically.
-% path = 'C:\Users\Reid\Documents\RHD2132\testing\';
-% d = dir([path '*.rhd']);
-% file = d(end).name;
-
 tic;
-filename = [path,file];
+% skip file prompt if filename is set -Matt
+if isempty(varargin)
+    [file, path, filterindex] = ...
+        uigetfile('*.rhd', 'Select an RHD2000 Data File', 'MultiSelect', 'off');
+
+    if (file == 0)
+        return;
+    end
+
+    % Read most recent file automatically.
+    % path = 'C:\Users\Reid\Documents\RHD2132\testing\';
+    % d = dir([path '*.rhd']);
+    % file = d(end).name;
+
+    filename = [path,file];
+else
+    filename = varargin{1};
+end
 fid = fopen(filename, 'r');
 
 s = dir(filename);

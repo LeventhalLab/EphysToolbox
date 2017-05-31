@@ -12,11 +12,13 @@ function [A,f] = simpleFFT(data,Fs,newFig)
 
     if newFig
         figure;
-        semilogy(f,smooth(A,1));
-%         xlim([5 100]);
-        xlabel('Frequency (Hz)')
-        ylabel('|Y(f)|')
+    else
+        hold on;
     end
+    semilogy(f,smooth(A,200));
+    xlim([5 100]);
+    xlabel('Frequency (Hz)')
+    ylabel('|Y(f)|')
 end
 
 function [A,f] = getFFT(data,Fs)
