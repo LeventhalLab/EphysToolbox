@@ -23,7 +23,7 @@ if type
     f_amplifier_data = zeros(length(amplifier_channels), length(t_amplifier));
     for channel = 0:length(amplifier_channels)-1
         f_amplifier_data(channel+1,:) = filtfilt(b,a,amplifier_data(channel+1,:));
-        ddt_write_v2([save_name '_channel_' num2str(channel) '.ddt'],1,length(f_amplifier_data(channel+1,:)),frequency_parameters.amplifier_sample_rate,f_amplifier_data(channel+1,:)/1000);
+        ddt_write_v([save_name '_channel_' num2str(channel) '.ddt'],1,length(f_amplifier_data(channel+1,:)),frequency_parameters.amplifier_sample_rate,f_amplifier_data(channel+1,:)/1000);
     end
 
 
