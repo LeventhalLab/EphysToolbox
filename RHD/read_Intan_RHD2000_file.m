@@ -629,4 +629,3 @@ variable_name = inputname(1);
 assignin('base', variable_name, variable);
 
 return;
-
