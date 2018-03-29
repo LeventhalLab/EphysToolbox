@@ -1,4 +1,10 @@
-function [A,f] = simpleFFT(data,Fs,newFig)
+function [A,f] = simpleFFT(data,Fs,varargin)
+    p = inputParser;
+    addOptional(p,'newFig',true,@islogical);
+    addOptional(p,'nSmooth',10,@isscalar);
+    parse(p,varargin{:});
+    inputs = p.Results;
+
     if size(data,1) > 1
         allA = [];
         for ii=1:size(data)
@@ -10,13 +16,14 @@ function [A,f] = simpleFFT(data,Fs,newFig)
         [A,f] = getFFT(data,Fs);
     end
 
-    if newFig
+    if inputs.newFig
         figure;
     else
         hold on;
     end
-    semilogy(f,smooth(A,200));
-    xlim([1 15]);
+    
+    semilogy(f,smooth(A,inputs.nSmooth));
+    xlim([1 80]);
     xlabel('Frequency (Hz)')
     ylabel('|Y(f)|')
 end

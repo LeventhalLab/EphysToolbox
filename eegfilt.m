@@ -128,7 +128,7 @@ if epochs*epochframes ~= frames,
     error('epochframes does not divide frames.\n');
 end
 
-if filtorder*3 > epochframes,   % Matlab filtfilt() restriction
+if filtorder > epochframes,   % Matlab filtfilt() restriction
     fprintf('eegfilt(): filter order is %d. ',filtorder);
     error('epochframes must be at least 3 times the filtorder.');
 end
