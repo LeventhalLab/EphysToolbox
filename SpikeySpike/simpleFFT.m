@@ -23,7 +23,7 @@ function [A,f] = simpleFFT(data,Fs,varargin)
     end
     
     semilogy(f,smooth(A,inputs.nSmooth));
-    xlim([1 80]);
+    xlim([1 100]);
     xlabel('Frequency (Hz)')
     ylabel('|Y(f)|')
 end
