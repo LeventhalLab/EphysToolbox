@@ -26,6 +26,7 @@ function [A,f] = simpleFFT(data,Fs,varargin)
     xlim([1 100]);
     xlabel('Frequency (Hz)')
     ylabel('|Y(f)|')
+    set(gcf,'color','w')
 end
 
 function [A,f] = getFFT(data,Fs)
