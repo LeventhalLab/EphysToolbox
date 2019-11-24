@@ -1,13 +1,13 @@
-function [data,locs] = artifactThresh(data,validMask,thresh)
+function [data,locs] = artifactThreshv2(data,thresh)
     % finds peaks in all channels and combine those locations so that each
     % channel attempts to set that span to zero
-    
+    validMask = 1;
     locs = [];
     for ii=1:size(data,1)
         if ~validMask(ii)
             continue;
         end
-        tlocs = peakseek(abs(data(ii,:)),1,thresh);
+        tlocs = peakseek(diff(abs(data(ii,:))),1,thresh);
         locs = [locs tlocs];
     end
     
